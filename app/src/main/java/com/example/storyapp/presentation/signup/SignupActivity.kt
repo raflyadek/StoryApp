@@ -5,9 +5,13 @@ import android.animation.ObjectAnimator
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.InputFilter
+import android.text.TextWatcher
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import com.example.storyapp.R
 import com.example.storyapp.databinding.ActivitySignUpBinding
@@ -15,9 +19,14 @@ import com.example.storyapp.databinding.ActivitySignUpBinding
 class SignupActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivitySignUpBinding.inflate(layoutInflater) }
+    private lateinit var etPassword: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        setupView()
+        setupAction()
+        playAnimation()
     }
 
     private fun setupView() {
@@ -47,6 +56,29 @@ class SignupActivity : AppCompatActivity() {
                 show()
             }
         }
+        etPassword = binding.passwordEditText
+        val maxLength = 8
+        val inputFilterArray = arrayOfNulls<InputFilter>(1)
+        inputFilterArray[0] = InputFilter.LengthFilter(maxLength)
+        etPassword.filters = inputFilterArray
+        etPassword.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+                val password = p0.toString().trim()
+                if (password.length < maxLength) {
+                    etPassword.error = getString(R.string.password_8_character)
+                } else {
+                    etPassword.error = null
+                }
+            }
+
+        })
     }
 
     private fun playAnimation() {
@@ -61,15 +93,15 @@ class SignupActivity : AppCompatActivity() {
         val nameTextView =
             ObjectAnimator.ofFloat(binding.nameTextView, View.ALPHA, 1f).setDuration(100)
         val nameEditTextView =
-            ObjectAnimator.ofFloat(binding.nameEditText, View.ALPHA, 1f).setDuration(100)
+            ObjectAnimator.ofFloat(binding.nameEditTextLayout, View.ALPHA, 1f).setDuration(100)
         val emailTextView =
             ObjectAnimator.ofFloat(binding.emailTextView, View. ALPHA, 1f).setDuration(100)
         val emailEditTextView =
-            ObjectAnimator.ofFloat(binding.emailEditText, View.ALPHA, 1f).setDuration(100)
+            ObjectAnimator.ofFloat(binding.emailEditTextLayout, View.ALPHA, 1f).setDuration(100)
         val passwordTextView =
             ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 1f).setDuration(100)
         val passwordEditTextView =
-            ObjectAnimator.ofFloat(binding.passwordEditText, View.ALPHA, 1f).setDuration(100)
+            ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(100)
         val signup =
             ObjectAnimator.ofFloat(binding.signupButton, View.ALPHA, 1f).setDuration(100)
 
