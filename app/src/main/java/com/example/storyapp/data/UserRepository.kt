@@ -12,7 +12,7 @@ class UserRepository private constructor(
         userPreference.saveSession(user)
     }
 
-    suspend fun getSession(): Flow<UserModel> {
+    fun getSession(): Flow<UserModel> {
         return userPreference.getSession()
     }
 
