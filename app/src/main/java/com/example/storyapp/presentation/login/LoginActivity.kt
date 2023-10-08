@@ -16,7 +16,6 @@ import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import com.example.storyapp.R
-import com.example.storyapp.data.preference.UserModel
 import com.example.storyapp.databinding.ActivityLoginBinding
 import com.example.storyapp.presentation.ViewModelFactory
 import com.example.storyapp.presentation.main.MainActivity

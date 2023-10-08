@@ -12,9 +12,14 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.EditText
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.ViewModel
 import com.example.storyapp.R
+import com.example.storyapp.data.Result
 import com.example.storyapp.databinding.ActivitySignUpBinding
+import com.example.storyapp.presentation.ViewModelFactory
+import com.example.storyapp.presentation.login.LoginActivity
 
 class SignupActivity : AppCompatActivity() {
 
@@ -44,7 +49,27 @@ class SignupActivity : AppCompatActivity() {
 
     private fun setupAction() {
         binding.signupButton.setOnClickListener {
+            val name = binding.nameEditText.text.toString()
             val email = binding.emailEditText.text.toString()
+            val password = binding.passwordEditText.text.toString()
+
+            if(email.isEmpty()){
+                binding.emailEditText.error = "Email required"
+                binding.emailEditText.requestFocus()
+                return@setOnClickListener
+            }
+
+            if(name.isEmpty()) {
+                binding.nameEditText.error = "Name required"
+                binding.nameEditText.requestFocus()
+                return@setOnClickListener
+            }
+
+            if(password.isEmpty()) {
+                binding.passwordEditText.error = "password required"
+                binding.passwordEditText.requestFocus()
+                return@setOnClickListener
+            }
 
             AlertDialog.Builder(this).apply {
                 setTitle("Berhasil!")
@@ -79,6 +104,24 @@ class SignupActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    private suspend fun observeViewModel(
+        name: String,
+        email: String,
+        password: String
+    ) {
+        val factory = ViewModelFactory.getInstance(this)
+        val viewModel: SignupViewModel by viewModels { factory }
+        viewModel.userRegister(name, email, password).observe(this) { result ->
+            if (result != null) {
+                when(result) {
+                    is Result.Success -> {
+
+                    }
+                }
+            }
+        }
     }
 
     private fun playAnimation() {
@@ -118,5 +161,13 @@ class SignupActivity : AppCompatActivity() {
             )
             startDelay = 100
         }.start()
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.progressBar.visibility = View.GONE
+        }
     }
 }
