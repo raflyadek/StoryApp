@@ -52,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
     private fun setupAction() {
         binding.loginButton.setOnClickListener {
             val email = binding.emailEditText.text.toString()
-            viewModel.saveSession(UserModel(email, "sample_token"))
+            viewModel.userLogin(email, "sample_token"))
             AlertDialog.Builder(this).apply {
                 setTitle("Berhasil!")
                 setMessage("Anda berhasil login.")

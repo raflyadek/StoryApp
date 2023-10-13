@@ -14,12 +14,10 @@ import android.view.WindowManager
 import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.ViewModel
 import com.example.storyapp.R
-import com.example.storyapp.data.Result
+import com.example.storyapp.util.Result
 import com.example.storyapp.databinding.ActivitySignUpBinding
 import com.example.storyapp.presentation.ViewModelFactory
-import com.example.storyapp.presentation.login.LoginActivity
 
 class SignupActivity : AppCompatActivity() {
 
@@ -29,6 +27,7 @@ class SignupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        observeViewModel(email = "", name = "", password = "")
         setupView()
         setupAction()
         playAnimation()
@@ -106,7 +105,7 @@ class SignupActivity : AppCompatActivity() {
         })
     }
 
-    private suspend fun observeViewModel(
+    private fun observeViewModel(
         name: String,
         email: String,
         password: String
@@ -116,8 +115,12 @@ class SignupActivity : AppCompatActivity() {
         viewModel.userRegister(name, email, password).observe(this) { result ->
             if (result != null) {
                 when(result) {
+                    Result.Loading -> showLoading(true)
                     is Result.Success -> {
-
+                        showLoading(false)
+                    }
+                    is Result.Error -> {
+                        showLoading(false)
                     }
                 }
             }
