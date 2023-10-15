@@ -33,7 +33,9 @@ class Repository private constructor(
                 response: Response<RegisterResponse>
             ) {
                 if (response.code() == 201) {
-                    resultRegister.value = Result.Success(RegisterResponse())
+                    response.body()?.let {
+                        resultRegister.value = Result.Success(it)
+                    }
                 } else {
                     resultRegister.value = Result.Error("Registration Failed")
                 }
@@ -56,8 +58,10 @@ class Repository private constructor(
 
         client.enqueue(object : Callback<LoginResponse>{
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                if (response.code() == 201){
-                    resultLogin.value = Result.Success(LoginResponse())
+                if (response.isSuccessful){
+                    response.body()?.let {
+                        resultLogin.value = Result.Success(it)
+                    }
                 } else {
                     resultLogin.value = Result.Error("Login failed")
                 }

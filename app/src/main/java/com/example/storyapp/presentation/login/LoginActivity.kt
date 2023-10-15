@@ -97,7 +97,7 @@ class LoginActivity : AppCompatActivity() {
                 when(result) {
                     Result.Loading -> showLoading(true)
                     is Result.Success -> {
-                        login(result.data)
+                        saveLogin(result.data)
                         showLoading(false)
                         AlertDialog.Builder(this).apply {
                             setTitle("Berhasil!")
@@ -120,7 +120,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun login(data: LoginResponse) {
+    private fun saveLogin(data: LoginResponse) {
         if (data.error) {
             Toast.makeText(this, data.message, Toast.LENGTH_SHORT).show()
         } else {

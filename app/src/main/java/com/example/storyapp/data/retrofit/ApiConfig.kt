@@ -1,5 +1,7 @@
 package com.example.storyapp.data.retrofit
 
+import android.content.Context
+import com.example.storyapp.data.preference.UserPreference
 import com.loopj.android.http.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -8,7 +10,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiConfig {
     companion object{
-        fun getApiService() : ApiService {
+        fun getApiService(context: Context) : ApiService {
+            val sharedPref = UserPreference.initPref(context, "saveSession")
+            val token = sharedPref.getString("token", null).toString()
             val loggingInterceptor = if(BuildConfig.DEBUG) {
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
             } else {
