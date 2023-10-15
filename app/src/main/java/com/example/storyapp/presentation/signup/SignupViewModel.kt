@@ -8,7 +8,7 @@ import com.example.storyapp.data.remote.RegisterResponse
 
 class SignupViewModel(private val repository: Repository): ViewModel() {
 
-    suspend fun userRegister(
+    fun userRegister(
         name: String,
         email: String,
         password: String

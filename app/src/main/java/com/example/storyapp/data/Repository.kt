@@ -1,8 +1,10 @@
 package com.example.storyapp.data
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.liveData
 import com.example.storyapp.data.preference.UserPreference
 import com.example.storyapp.data.remote.LoginResponse
 import com.example.storyapp.data.remote.RegisterResponse
@@ -12,13 +14,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 class Repository private constructor(
-    private val userPreference: UserPreference,
     private val apiService: ApiService
 ) {
 
     private val resultRegister = MediatorLiveData<Result<RegisterResponse>>()
     private val resultLogin = MediatorLiveData<Result<LoginResponse>>()
-    suspend fun userRegister(
+    fun userRegister(
         name: String,
         email: String,
         password: String
@@ -45,19 +46,16 @@ class Repository private constructor(
         return resultRegister
     }
 
-    suspend fun userLogin(
+    fun userLogin(
         email: String,
         password: String
-    ): LiveData<Result<LoginResponse>> {
+    ): LiveData<Result<LoginResponse>> = liveData{
         resultLogin.value = Result.Loading
         val client = apiService.loginUser(email, password)
 
         client.enqueue(object : Callback<LoginResponse>{
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful){
-                    //nyimpen token login ke datastore
-//                    val token = response.body()?.loginResult?.token
-//                    userPreference.saveSession(token!!)
                     resultLogin.value = Result.Success(LoginResponse())
                 } else {
                     resultLogin.value = Result.Error("Login failed")
@@ -69,26 +67,16 @@ class Repository private constructor(
             }
 
         })
-        return resultLogin
-    }
-
-    fun getSession(): LiveData<String?> {
-        return userPreference.getSession().asLiveData()
-    }
-
-    suspend fun logout() {
-        userPreference.logout()
     }
 
     companion object {
         @Volatile
         private var instance: Repository? = null
         fun getInstance(
-            userPreference: UserPreference,
             apiService: ApiService
         ): Repository =
             instance ?: synchronized(this) {
-                instance ?: Repository(userPreference, apiService)
+                instance ?: Repository(apiService)
             }.also { instance = it }
     }
 }

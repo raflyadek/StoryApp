@@ -69,16 +69,7 @@ class SignupActivity : AppCompatActivity() {
                 binding.passwordEditText.requestFocus()
                 return@setOnClickListener
             }
-
-            AlertDialog.Builder(this).apply {
-                setTitle("Berhasil!")
-                setMessage("Akun $email kamu sudah jadi.")
-                setPositiveButton("Next") { _, _ ->
-                    finish()
-                }
-                create()
-                show()
-            }
+            observeViewModel(name, email, password)
         }
         etPassword = binding.passwordEditText
         val maxLength = 8
@@ -118,6 +109,15 @@ class SignupActivity : AppCompatActivity() {
                     Result.Loading -> showLoading(true)
                     is Result.Success -> {
                         showLoading(false)
+                        AlertDialog.Builder(this).apply {
+                            setTitle("Berhasil!")
+                            setMessage("Akun $email kamu sudah jadi.")
+                            setPositiveButton("Next") { _, _ ->
+                                finish()
+                            }
+                            create()
+                            show()
+                        }
                     }
                     is Result.Error -> {
                         showLoading(false)

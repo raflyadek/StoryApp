@@ -1,6 +1,7 @@
 package com.example.storyapp.data.preference
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -10,36 +11,26 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "session")
-
-class UserPreference private constructor(private val dataStore: DataStore<Preferences>){
-
-    suspend fun saveSession(userToken: String){
-        dataStore.edit { preferences ->
-            preferences[TOKEN_KEY] = userToken
-        }
+object UserPreference {
+    fun initPref(context: Context, name: String) : SharedPreferences {
+        return context.getSharedPreferences(name, Context.MODE_PRIVATE)
     }
 
-    fun getSession(): Flow<String?> =
-        dataStore.data.map { it[TOKEN_KEY]}
-
-    suspend fun logout() {
-        dataStore.edit { preferences ->
-            preferences.clear()
-        }
+    private fun editPref(context: Context, name: String) : SharedPreferences.Editor {
+        val sharedPref = context.getSharedPreferences(name, Context.MODE_PRIVATE)
+        return sharedPref.edit()
     }
 
-    companion object {
-        @Volatile
-        private var INSTANCE: UserPreference? = null
-        private val TOKEN_KEY = stringPreferencesKey("token")
+    fun saveSession(context: Context, token: String) {
+        val editor = editPref(context, "saveSession")
+        editor.putString("token", token)
+        editor.apply()
+    }
 
-        fun getInstance(dataStore: DataStore<Preferences>): UserPreference{
-            return INSTANCE ?: synchronized(this){
-                val instance = UserPreference(dataStore)
-                INSTANCE = instance
-                instance
-            }
-        }
+    fun clearSession(context: Context) {
+        val editor = editPref(context, "saveSession")
+        editor.remove("token")
+        editor.remove("status")
+        editor.apply()
     }
 }

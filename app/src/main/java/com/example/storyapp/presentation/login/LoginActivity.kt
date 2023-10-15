@@ -13,12 +13,16 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import com.example.storyapp.R
+import com.example.storyapp.data.preference.UserPreference
+import com.example.storyapp.data.remote.LoginResponse
 import com.example.storyapp.databinding.ActivityLoginBinding
 import com.example.storyapp.presentation.ViewModelFactory
 import com.example.storyapp.presentation.main.MainActivity
+import com.example.storyapp.util.Result
 
 class LoginActivity : AppCompatActivity() {
 
@@ -52,21 +56,12 @@ class LoginActivity : AppCompatActivity() {
     private fun setupAction() {
         binding.loginButton.setOnClickListener {
             val email = binding.emailEditText.text.toString()
-            viewModel.userLogin(email, "sample_token"))
-            AlertDialog.Builder(this).apply {
-                setTitle("Berhasil!")
-                setMessage("Anda berhasil login.")
-                setPositiveButton("Next") {_, _ ->
-                    val intent = Intent(context, MainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
-                    finish()
-                }
-                create()
-                show()
-            }
+            val password = binding.passwordEditText.text.toString()
+
+            observeViewModel(email, password)
         }
         etPassword = binding.passwordEditText
+
         val maxLength = 8
         val inputFilterArray = arrayOfNulls<InputFilter>(1)
         inputFilterArray[0] = InputFilter.LengthFilter(maxLength)
@@ -89,6 +84,48 @@ class LoginActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    private fun observeViewModel (
+        email: String,
+        password: String
+    ) {
+        val factory = ViewModelFactory.getInstance(this)
+        val viewModel: LoginViewModel by viewModels { factory }
+        viewModel.userLogin(email, password).observe(this) { result ->
+            if (result != null){
+                when(result) {
+                    Result.Loading -> showLoading(true)
+                    is Result.Success -> {
+                        login(result.data)
+                        showLoading(false)
+                        AlertDialog.Builder(this).apply {
+                            setTitle("Berhasil!")
+                            setMessage("Anda berhasil login.")
+                            setPositiveButton("Next") {_, _ ->
+                                val intent = Intent(context, MainActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                startActivity(intent)
+                                finish()
+                            }
+                            create()
+                            show()
+                        }
+                    }
+                    is Result.Error -> {
+                        showLoading(false)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun login(data: LoginResponse) {
+        if (data.error!!) {
+            Toast.makeText(this, data.message, Toast.LENGTH_SHORT).show()
+        } else {
+            UserPreference.saveSession(this, data?.loginResult?.token!!)
+        }
     }
 
     private fun playAnimation() {
@@ -125,5 +162,12 @@ class LoginActivity : AppCompatActivity() {
             )
             startDelay = 100
         }.start()
+    }
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.progressBar.visibility = View.GONE
+        }
     }
 }

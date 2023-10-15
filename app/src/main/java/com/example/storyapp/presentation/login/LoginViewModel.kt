@@ -7,7 +7,7 @@ import com.example.storyapp.util.Result
 import com.example.storyapp.data.remote.LoginResponse
 
 class LoginViewModel(private val repository: Repository) : ViewModel() {
-    suspend fun userLogin(
+    fun userLogin(
         email: String,
         password: String
     ): LiveData<Result<LoginResponse>> = repository.userLogin(email, password)
