@@ -9,6 +9,7 @@ import com.example.storyapp.data.preference.UserPreference
 import com.example.storyapp.data.remote.LoginResponse
 import com.example.storyapp.data.remote.RegisterResponse
 import com.example.storyapp.data.retrofit.ApiService
+import com.example.storyapp.presentation.main.MainActivity
 import com.example.storyapp.util.Result
 import retrofit2.Call
 import retrofit2.Callback
@@ -49,13 +50,13 @@ class Repository private constructor(
     fun userLogin(
         email: String,
         password: String
-    ): LiveData<Result<LoginResponse>> = liveData{
+    ): LiveData<Result<LoginResponse>>{
         resultLogin.value = Result.Loading
         val client = apiService.loginUser(email, password)
 
         client.enqueue(object : Callback<LoginResponse>{
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                if (response.isSuccessful){
+                if (response.code() == 201){
                     resultLogin.value = Result.Success(LoginResponse())
                 } else {
                     resultLogin.value = Result.Error("Login failed")
@@ -67,8 +68,12 @@ class Repository private constructor(
             }
 
         })
+        return resultLogin
     }
 
+    fun logOut(context: Context){
+        return UserPreference.clearSession(context)
+    }
     companion object {
         @Volatile
         private var instance: Repository? = null

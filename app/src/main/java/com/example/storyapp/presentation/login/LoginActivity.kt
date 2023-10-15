@@ -121,10 +121,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login(data: LoginResponse) {
-        if (data.error!!) {
+        if (data.error) {
             Toast.makeText(this, data.message, Toast.LENGTH_SHORT).show()
         } else {
-            UserPreference.saveSession(this, data?.loginResult?.token!!)
+            UserPreference.saveSession(this, data.loginResult.token)
         }
     }
 

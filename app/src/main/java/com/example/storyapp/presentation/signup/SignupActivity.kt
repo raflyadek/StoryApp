@@ -2,6 +2,7 @@ package com.example.storyapp.presentation.signup
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -18,6 +19,7 @@ import com.example.storyapp.R
 import com.example.storyapp.util.Result
 import com.example.storyapp.databinding.ActivitySignUpBinding
 import com.example.storyapp.presentation.ViewModelFactory
+import com.example.storyapp.presentation.login.LoginActivity
 
 class SignupActivity : AppCompatActivity() {
 
@@ -113,6 +115,9 @@ class SignupActivity : AppCompatActivity() {
                             setTitle("Berhasil!")
                             setMessage("Akun $email kamu sudah jadi.")
                             setPositiveButton("Next") { _, _ ->
+                                val intent = Intent (context, LoginActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                startActivity(intent)
                                 finish()
                             }
                             create()
