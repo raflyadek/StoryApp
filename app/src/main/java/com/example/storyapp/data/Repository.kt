@@ -1,6 +1,8 @@
 package com.example.storyapp.data
 
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.asLiveData
 import com.example.storyapp.data.preference.UserPreference
@@ -22,57 +24,32 @@ class Repository private constructor(
         name: String,
         email: String,
         password: String
-    ): LiveData<Result<RegisterResponse>> {
+    ): LiveData<Result<RegisterResponse>> = liveData {
         resultRegister.value = Result.Loading
-        val client = apiService.createUser(name, email, password)
-        client.enqueue(object : Callback<RegisterResponse> {
-            override fun onResponse(
-                call: Call<RegisterResponse>,
-                response: Response<RegisterResponse>
-            ) {
-                if (response.code() == 201) {
-                    response.body()?.let {
-                        resultRegister.value = Result.Success(it)
-                    }
-                } else {
-                    resultRegister.value = Result.Error("Registration Failed")
-                }
-            }
-
-            override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
-                resultRegister.value = Result.Error(t.message.toString())
-            }
-
-        })
-        return resultRegister
+        try {
+            val client = apiService.createUser(name, email, password)
+            emit(Result.Success(client))
+        } catch (e: Exception) {
+            Log.e("SignUpViewModel", "userRegister: ${e.message.toString()}")
+            emit(Result.Error(e.message.toString()))
+        }
     }
 
     fun userLogin(
         email: String,
         password: String
-    ): LiveData<Result<LoginResponse>>{
+    ): LiveData<Result<LoginResponse>> = liveData {
         resultLogin.value = Result.Loading
-        val client = apiService.loginUser(email, password)
-
-        client.enqueue(object : Callback<LoginResponse>{
-            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                if (response.isSuccessful){
-                    response.body()?.let {
-                        resultLogin.value = Result.Success(it)
-                    }
-                } else {
-                    resultLogin.value = Result.Error("Login failed")
-                }
-            }
-
-            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                resultLogin.value = Result.Error(t.message.toString())
-            }
-
-        })
-        return resultLogin
+        try {
+            val client = apiService.loginUser(email, password)
+            val token = client.loginResult.token
+            saveSession(token)
+            emit(Result.Success(client))
+        } catch (e: Exception) {
+            Log.e("LoginViewModel", "userLogin: ${e.message.toString()}")
+            emit(Result.Error(e.message.toString()))
+        }
     }
-
     suspend fun clearSession() {
         return userPref.clearSession()
     }

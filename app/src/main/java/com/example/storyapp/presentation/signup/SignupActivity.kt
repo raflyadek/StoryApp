@@ -23,13 +23,13 @@ import com.example.storyapp.presentation.login.LoginActivity
 
 class SignupActivity : AppCompatActivity() {
 
-    private val binding by lazy { ActivitySignUpBinding.inflate(layoutInflater) }
+    private val binding by lazy {
+        ActivitySignUpBinding.inflate(layoutInflater) }
     private lateinit var etPassword: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        observeViewModel(email = "", name = "", password = "")
         setupView()
         setupAction()
         playAnimation()

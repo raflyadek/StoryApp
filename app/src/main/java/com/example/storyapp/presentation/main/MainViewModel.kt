@@ -9,5 +9,5 @@ import com.example.storyapp.data.Repository
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: Repository) : ViewModel() {
-    fun logout(context: Context) = repository.logOut(context)
+//    fun logout(context: Context) = repository.logOut(context)
 }

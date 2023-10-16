@@ -22,6 +22,7 @@ import com.example.storyapp.data.remote.LoginResponse
 import com.example.storyapp.databinding.ActivityLoginBinding
 import com.example.storyapp.presentation.ViewModelFactory
 import com.example.storyapp.presentation.main.MainActivity
+import com.example.storyapp.util.Constant.EXTRA_TOKEN
 import com.example.storyapp.util.Result
 
 class LoginActivity : AppCompatActivity() {
@@ -97,14 +98,13 @@ class LoginActivity : AppCompatActivity() {
                 when(result) {
                     Result.Loading -> showLoading(true)
                     is Result.Success -> {
-                        saveLogin(result.data)
                         showLoading(false)
                         AlertDialog.Builder(this).apply {
                             setTitle("Berhasil!")
                             setMessage("Anda berhasil login.")
                             setPositiveButton("Next") {_, _ ->
                                 val intent = Intent(context, MainActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                intent.putExtra(EXTRA_TOKEN, result.data.loginResult.token)
                                 startActivity(intent)
                                 finish()
                             }
@@ -117,14 +117,6 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }
             }
-        }
-    }
-
-    private fun saveLogin(data: LoginResponse) {
-        if (data.error) {
-            Toast.makeText(this, data.message, Toast.LENGTH_SHORT).show()
-        } else {
-            UserPreference.saveSession(this, data.loginResult.token)
         }
     }
 
