@@ -1,21 +1,19 @@
 package com.example.storyapp.data
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.liveData
 import com.example.storyapp.data.preference.UserPreference
 import com.example.storyapp.data.remote.LoginResponse
 import com.example.storyapp.data.remote.RegisterResponse
 import com.example.storyapp.data.retrofit.ApiService
-import com.example.storyapp.presentation.main.MainActivity
 import com.example.storyapp.util.Result
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 class Repository private constructor(
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val userPref: UserPreference
 ) {
 
     private val resultRegister = MediatorLiveData<Result<RegisterResponse>>()
@@ -75,17 +73,27 @@ class Repository private constructor(
         return resultLogin
     }
 
-    fun logOut(context: Context){
-        return UserPreference.clearSession(context)
+    suspend fun clearSession() {
+        return userPref.clearSession()
     }
+
+    fun getSession() : LiveData<String?> {
+        return userPref.getSession().asLiveData()
+    }
+
+    suspend fun saveSession(userToken: String) {
+        return userPref.saveSession(userToken)
+    }
+
     companion object {
         @Volatile
         private var instance: Repository? = null
         fun getInstance(
-            apiService: ApiService
+            apiService: ApiService,
+            userPref: UserPreference
         ): Repository =
             instance ?: synchronized(this) {
-                instance ?: Repository(apiService)
+                instance ?: Repository(apiService, userPref)
             }.also { instance = it }
     }
 }

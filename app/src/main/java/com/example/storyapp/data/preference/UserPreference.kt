@@ -11,26 +11,37 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-object UserPreference {
-    fun initPref(context: Context, name: String) : SharedPreferences {
-        return context.getSharedPreferences(name, Context.MODE_PRIVATE)
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "session")
+
+class UserPreference private constructor(private val dataStore: DataStore<Preferences>){
+
+    suspend fun saveSession(userToken: String){
+        dataStore.edit { preferences ->
+            preferences[TOKEN_KEY] = userToken
+        }
     }
 
-    private fun editPref(context: Context, name: String) : SharedPreferences.Editor {
-        val sharedPref = context.getSharedPreferences(name, Context.MODE_PRIVATE)
-        return sharedPref.edit()
+    fun getSession(): Flow<String?> =
+        dataStore.data.map { preferences ->
+            preferences[TOKEN_KEY]}
+
+    suspend fun clearSession() {
+        dataStore.edit { preferences ->
+            preferences.clear()
+        }
     }
 
-    fun saveSession(context: Context, token: String) {
-        val editor = editPref(context, "saveSession")
-        editor.putString("token", token)
-        editor.apply()
-    }
+    companion object {
+        @Volatile
+        private var INSTANCE: UserPreference? = null
+        private val TOKEN_KEY = stringPreferencesKey("token")
 
-    fun clearSession(context: Context) {
-        val editor = editPref(context, "saveSession")
-        editor.remove("token")
-        editor.remove("status")
-        editor.apply()
+        fun getInstance(dataStore: DataStore<Preferences>): UserPreference{
+            return INSTANCE ?: synchronized(this){
+                val instance = UserPreference(dataStore)
+                INSTANCE = instance
+                instance
+            }
+        }
     }
 }
