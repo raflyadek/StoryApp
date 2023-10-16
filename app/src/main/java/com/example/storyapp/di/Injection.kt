@@ -7,7 +7,7 @@ import com.example.storyapp.data.retrofit.ApiConfig
 
 object Injection {
     fun provideRepository(context: Context): Repository {
-        val apiService = ApiConfig.getApiService()
+        val apiService = ApiConfig.getApiService(context)
         return Repository.getInstance(apiService)
     }
 }
