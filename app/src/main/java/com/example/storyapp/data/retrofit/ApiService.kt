@@ -14,7 +14,7 @@ import retrofit2.http.Query
 interface ApiService {
     @FormUrlEncoded
     @POST("register")
-    fun createUser(
+    suspend fun createUser(
         @Field("name") name: String,
         @Field("email") email: String,
         @Field("password") password: String
@@ -22,14 +22,13 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("login")
-    fun loginUser(
+    suspend fun loginUser(
         @Field("email") email: String,
         @Field("password") password: String
     ) : LoginResponse
 
     @GET("stories")
     suspend fun getStories(
-        @Header("Authorization") token: String,
         @Query("page") page: Int? = null,
         @Query("size") size: Int? = null,
         @Query("location") location: Int? = null

@@ -36,6 +36,7 @@ class Repository private constructor(
         email: String,
         password: String
     ): LiveData<Result<LoginResponse>> = liveData {
+        emit(Result.Loading)
         try {
             val client = apiService.loginUser(email, password)
             val token = client.loginResult.token

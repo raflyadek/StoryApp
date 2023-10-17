@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StoryApp">
         <activity
-            android:name=".presentation.splash.SplashActivity"
+            android:name=".presentation.welcome.WelcomeActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.main.MainActivity"
@@ -24,7 +24,7 @@
             android:name=".presentation.login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.welcome.WelcomeActivity"
+            android:name=".presentation.splash.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
