@@ -18,14 +18,11 @@ class Repository private constructor(
     private val userPref: UserPreference
 ) {
 
-    private val resultRegister = MediatorLiveData<Result<RegisterResponse>>()
-    private val resultLogin = MediatorLiveData<Result<LoginResponse>>()
     fun userRegister(
         name: String,
         email: String,
         password: String
     ): LiveData<Result<RegisterResponse>> = liveData {
-        resultRegister.value = Result.Loading
         try {
             val client = apiService.createUser(name, email, password)
             emit(Result.Success(client))
@@ -39,7 +36,6 @@ class Repository private constructor(
         email: String,
         password: String
     ): LiveData<Result<LoginResponse>> = liveData {
-        resultLogin.value = Result.Loading
         try {
             val client = apiService.loginUser(email, password)
             val token = client.loginResult.token
