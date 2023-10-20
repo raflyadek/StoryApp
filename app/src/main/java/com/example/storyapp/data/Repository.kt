@@ -6,8 +6,10 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.asLiveData
 import com.example.storyapp.data.preference.UserPreference
+import com.example.storyapp.data.remote.ListStoryResponse
 import com.example.storyapp.data.remote.LoginResponse
 import com.example.storyapp.data.remote.RegisterResponse
+import com.example.storyapp.data.remote.Story
 import com.example.storyapp.data.retrofit.ApiService
 import com.example.storyapp.util.Result
 import retrofit2.Call
@@ -44,6 +46,17 @@ class Repository private constructor(
             emit(Result.Success(client))
         } catch (e: Exception) {
             Log.e("LoginViewModel", "userLogin: ${e.message.toString()}")
+            emit(Result.Error(e.message.toString()))
+        }
+    }
+
+    fun getStories(): LiveData<Result<List<Story>>> = liveData {
+        emit(Result.Loading)
+        try {
+            val client = apiService.getStories()
+            emit(Result.Success(client))
+        } catch (e: Exception) {
+            Log.e("MainViewModel", "getStories: ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
         }
     }

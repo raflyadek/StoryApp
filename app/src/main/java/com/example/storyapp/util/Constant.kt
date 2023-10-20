@@ -2,7 +2,6 @@ package com.example.storyapp.util
 
 object Constant {
 
-    const val EXTRA_DETAIL = "extra_detail"
-    const val EXTRA_TOKEN = "extra_token"
-
+    const val EXTRA_DETAIL = "EXTRA_DETAIL"
+    const val EXTRA_TOKEN = "EXTRA_TOKEN"
 }

@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StoryApp">
         <activity
+            android:name=".presentation.map.MapActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.detail.DetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.welcome.WelcomeActivity"
             android:exported="false" />
         <activity

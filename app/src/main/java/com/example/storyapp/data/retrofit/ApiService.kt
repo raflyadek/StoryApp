@@ -3,6 +3,7 @@ package com.example.storyapp.data.retrofit
 import com.example.storyapp.data.remote.ListStoryResponse
 import com.example.storyapp.data.remote.LoginResponse
 import com.example.storyapp.data.remote.RegisterResponse
+import com.example.storyapp.data.remote.Story
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -32,6 +33,6 @@ interface ApiService {
         @Query("page") page: Int? = null,
         @Query("size") size: Int? = null,
         @Query("location") location: Int? = null
-    ) : ListStoryResponse
+    ) : List<Story>
 
 }
