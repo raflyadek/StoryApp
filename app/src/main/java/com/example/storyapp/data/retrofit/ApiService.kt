@@ -1,5 +1,7 @@
 package com.example.storyapp.data.retrofit
 
+import com.example.storyapp.data.remote.DetailResponse
+import com.example.storyapp.data.remote.DetailStory
 import com.example.storyapp.data.remote.ListStoryResponse
 import com.example.storyapp.data.remote.LoginResponse
 import com.example.storyapp.data.remote.RegisterResponse
@@ -34,5 +36,11 @@ interface ApiService {
         @Query("size") size: Int? = null,
         @Query("location") location: Int? = null
     ) : ListStoryResponse
+
+    @GET("stories/{id}")
+    suspend fun detailStories(
+        @Query("id") id: String
+    ) : DetailResponse
+
 
 }
