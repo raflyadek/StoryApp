@@ -33,7 +33,7 @@ class SplashActivity : AppCompatActivity() {
         val viewModel: SplashViewModel by viewModels { factory }
         Handler(Looper.getMainLooper()).postDelayed({
             viewModel.getSession().observe(this) { token ->
-                if (token.isNullOrEmpty()) {
+                if (token == null) {
                     val intent = Intent(this, WelcomeActivity::class.java)
                     startActivity(intent)
                     finish()

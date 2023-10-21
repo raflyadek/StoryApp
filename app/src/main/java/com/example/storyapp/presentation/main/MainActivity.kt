@@ -27,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        observeViewModel()
     }
 
     private fun observeViewModel() {
@@ -38,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                     Result.Loading -> showLoading(true)
                     is Result.Success -> {
                         showLoading(false)
-                        showStory(result.data)
+                        showStory(result.data.listStory)
                     }
                     is Result.Error -> {
                         showLoading(false)
