@@ -3,9 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/upload_menu"
+        android:icon="@drawable/baseline_linked_camera_24"
+        android:title="@string/upload"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/map_menu"
         android:icon="@drawable/ic_map"
-        android:title="@string/login"
+        android:title="@string/map"
         app:showAsAction="ifRoom" />
 
     <item

@@ -18,6 +18,7 @@ import com.example.storyapp.presentation.adapter.ListStoryAdapter
 import com.example.storyapp.presentation.detail.DetailActivity
 import com.example.storyapp.presentation.map.MapActivity
 import com.example.storyapp.presentation.signup.SignupViewModel
+import com.example.storyapp.presentation.upload.UploadActivity
 import com.example.storyapp.util.Result
 
 class MainActivity : AppCompatActivity() {
@@ -29,6 +30,23 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         observeViewModel()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.logout_menu -> {
+                viewModel.logout()
+            }
+            R.id.map_menu -> {
+                val intent = Intent(this, MapActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.upload_menu -> {
+                val intent = Intent(this, UploadActivity::class.java)
+                startActivity(intent)
+            }
+        }
+        return true
     }
 
     private fun observeViewModel() {
@@ -73,18 +91,6 @@ class MainActivity : AppCompatActivity() {
         val itemDecoration = DividerItemDecoration(this, layoutManager.orientation)
         binding.rvStory.addItemDecoration(itemDecoration)
     }
-
-    private fun setupMenu(item: MenuItem) {
-            when (item.itemId) {
-                R.id.logout_menu -> {
-                    viewModel.logout()
-                }
-                R.id.map_menu -> {
-                    val intent = Intent(this, MapActivity::class.java)
-                    startActivity(intent)
-                }
-            }
-        }
 
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {
