@@ -3,20 +3,18 @@ package com.example.storyapp.data
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.asLiveData
 import com.example.storyapp.data.preference.UserPreference
 import com.example.storyapp.data.remote.DetailResponse
-import com.example.storyapp.data.remote.DetailStory
 import com.example.storyapp.data.remote.ListStoryResponse
 import com.example.storyapp.data.remote.LoginResponse
 import com.example.storyapp.data.remote.RegisterResponse
-import com.example.storyapp.data.remote.Story
+import com.example.storyapp.data.remote.UploadResponse
 import com.example.storyapp.data.retrofit.ApiService
 import com.example.storyapp.util.Result
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+
 class Repository private constructor(
     private val apiService: ApiService,
     private val userPref: UserPreference
@@ -29,7 +27,7 @@ class Repository private constructor(
     ): LiveData<Result<RegisterResponse>> = liveData {
         try {
             val client = apiService.createUser(name, email, password)
-            emit(Result.Success(client))
+            emit(Result.Success())
         } catch (e: Exception) {
             Log.e("SignUpViewModel", "userRegister: ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
@@ -45,7 +43,7 @@ class Repository private constructor(
             val client = apiService.loginUser(email, password)
             val token = client.loginResult.token
             saveSession(token)
-            emit(Result.Success(client))
+            emit(Result.Success())
         } catch (e: Exception) {
             Log.e("LoginViewModel", "userLogin: ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
@@ -56,7 +54,7 @@ class Repository private constructor(
         emit(Result.Loading)
         try {
             val client = apiService.getStories()
-            emit(Result.Success(client))
+            emit(Result.Success())
         } catch (e: Exception) {
             Log.e("MainViewModel", "getStories: ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
@@ -67,9 +65,22 @@ class Repository private constructor(
         emit(Result.Loading)
         try{
             val client = apiService.detailStories(id)
-            emit(Result.Success(client))
+            emit(Result.Success())
         } catch (e: Exception) {
             Log.e("DetailViewModel", "detailStories: ${e.message.toString()}")
+            emit(Result.Error(e.message.toString()))
+        }
+    }
+
+    fun uploadStories(
+        file: MultipartBody.Part, description: RequestBody
+    ): LiveData<Result<UploadResponse>> = liveData {
+            emit(Result.Loading)
+        try {
+            val client = apiService.uploadStory(file, description)
+            emit(Result.Success())
+        } catch (e: Exception) {
+            Log.e("UploadViewModel", "uploadStories: ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
         }
     }

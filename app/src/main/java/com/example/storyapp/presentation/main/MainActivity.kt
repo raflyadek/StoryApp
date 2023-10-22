@@ -17,6 +17,7 @@ import com.example.storyapp.databinding.ActivityMainBinding
 import com.example.storyapp.presentation.ViewModelFactory
 import com.example.storyapp.presentation.adapter.ListStoryAdapter
 import com.example.storyapp.presentation.detail.DetailActivity
+import com.example.storyapp.presentation.login.LoginViewModel
 import com.example.storyapp.presentation.map.MapActivity
 import com.example.storyapp.presentation.signup.SignupViewModel
 import com.example.storyapp.presentation.upload.UploadActivity
@@ -25,7 +26,9 @@ import com.example.storyapp.util.Result
 class MainActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private lateinit var viewModel: MainViewModel
+    private val viewModel by viewModels<MainViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -56,8 +59,6 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun observeViewModel() {
-        val factory = ViewModelFactory.getInstance(this)
-        val viewModel: MainViewModel by viewModels { factory }
         viewModel.getStories().observe(this) { result ->
             if (result != null) {
                 when(result) {

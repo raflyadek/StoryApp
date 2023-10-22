@@ -10,6 +10,7 @@ import com.example.storyapp.presentation.login.LoginViewModel
 import com.example.storyapp.presentation.main.MainViewModel
 import com.example.storyapp.presentation.signup.SignupViewModel
 import com.example.storyapp.presentation.splash.SplashViewModel
+import com.example.storyapp.presentation.upload.UploadViewModel
 import java.lang.IllegalArgumentException
 
 class ViewModelFactory(private val repository: Repository) : ViewModelProvider.NewInstanceFactory() {
@@ -31,6 +32,9 @@ class ViewModelFactory(private val repository: Repository) : ViewModelProvider.N
             }
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
                 DetailViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(UploadViewModel::class.java) -> {
+                UploadViewModel(repository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

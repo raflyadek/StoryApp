@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import com.example.storyapp.R
 import com.example.storyapp.databinding.ActivitySplashBinding
 import com.example.storyapp.presentation.ViewModelFactory
+import com.example.storyapp.presentation.login.LoginViewModel
 import com.example.storyapp.presentation.main.MainActivity
 import com.example.storyapp.presentation.welcome.WelcomeActivity
 import com.example.storyapp.util.Constant.EXTRA_TOKEN
@@ -20,6 +21,9 @@ class SplashActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivitySplashBinding.inflate(layoutInflater)
     }
+    private val viewModel by viewModels<SplashViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +33,6 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        val factory = ViewModelFactory.getInstance(this)
-        val viewModel: SplashViewModel by viewModels { factory }
         Handler(Looper.getMainLooper()).postDelayed({
             viewModel.getSession().observe(this) { token ->
                 if (token == null) {

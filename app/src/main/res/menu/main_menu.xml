@@ -6,17 +6,17 @@
         android:id="@+id/upload_menu"
         android:icon="@drawable/baseline_linked_camera_24"
         android:title="@string/upload"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/map_menu"
         android:icon="@drawable/ic_map"
         android:title="@string/map"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/logout_menu"
         android:icon="@drawable/ic_logout"
         android:title="@string/logout"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 </menu>

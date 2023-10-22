@@ -91,8 +91,6 @@ class LoginActivity : AppCompatActivity() {
         email: String,
         password: String
     ) {
-        val factory = ViewModelFactory.getInstance(this)
-        val viewModel: LoginViewModel by viewModels { factory }
         viewModel.userLogin(email, password).observe(this) { result ->
             if (result != null){
                 when(result) {

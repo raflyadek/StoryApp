@@ -20,12 +20,15 @@ import com.example.storyapp.util.Result
 import com.example.storyapp.databinding.ActivitySignUpBinding
 import com.example.storyapp.presentation.ViewModelFactory
 import com.example.storyapp.presentation.login.LoginActivity
+import com.example.storyapp.presentation.login.LoginViewModel
 
 class SignupActivity : AppCompatActivity() {
 
-    private val binding by lazy {
-        ActivitySignUpBinding.inflate(layoutInflater) }
+    private val binding by lazy { ActivitySignUpBinding.inflate(layoutInflater) }
     private lateinit var etPassword: EditText
+    private val viewModel by viewModels<SignupViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -103,8 +106,6 @@ class SignupActivity : AppCompatActivity() {
         email: String,
         password: String
     ) {
-        val factory = ViewModelFactory.getInstance(this)
-        val viewModel: SignupViewModel by viewModels { factory }
         viewModel.userRegister(name, email, password).observe(this) { result ->
             if (result != null) {
                 when(result) {
