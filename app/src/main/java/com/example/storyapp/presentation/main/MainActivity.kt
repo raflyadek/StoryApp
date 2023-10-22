@@ -3,6 +3,7 @@ package com.example.storyapp.presentation.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -32,6 +33,10 @@ class MainActivity : AppCompatActivity() {
         observeViewModel()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.logout_menu -> {
@@ -46,8 +51,9 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
+
 
     private fun observeViewModel() {
         val factory = ViewModelFactory.getInstance(this)
