@@ -1,6 +1,7 @@
 package com.example.storyapp.presentation.upload
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -91,8 +92,9 @@ class CameraActivity : AppCompatActivity() {
             ContextCompat.getMainExecutor(this),
             object : ImageCapture.OnImageSavedCallback{
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                    val savedUri = outputFileResults.savedUri ?: Uri.fromFile(photoFile)
                     val intent = Intent(this@CameraActivity, UploadActivity::class.java)
-                    intent.putExtra(EXTRA_PHOTO, photoFile)
+                    intent.putExtra(EXTRA_PHOTO, savedUri)
                     startActivity(intent)
                     finish()
                 }

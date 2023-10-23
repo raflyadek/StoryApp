@@ -32,6 +32,8 @@ class UploadActivity : AppCompatActivity() {
         ViewModelFactory.getInstance(this)
     }
     private var getFile: File? = null
+    private var currentImageUri: Uri? = null
+
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +49,6 @@ class UploadActivity : AppCompatActivity() {
         }
 
     }
-
-
 
     private fun startGallery() {
         val intent = Intent()
