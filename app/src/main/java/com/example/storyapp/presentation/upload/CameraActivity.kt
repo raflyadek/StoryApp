@@ -32,6 +32,8 @@ class CameraActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        startCamera()
+
         binding.ivSwitchCam.setOnClickListener {
             cameraSelector =
                 if (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) CameraSelector.DEFAULT_FRONT_CAMERA
@@ -43,15 +45,8 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
-    public override fun onResume() {
-        super.onResume()
-        hideSystemUI()
-        startCamera()
-    }
-
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-
         cameraProviderFuture.addListener({
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
             val preview = Preview.Builder()
@@ -84,33 +79,38 @@ class CameraActivity : AppCompatActivity() {
 
     private fun takePhoto() {
         val imageCapture = imageCapture ?: return
-        val photoFile = Helper.createFile(this.application)
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(
-            photoFile).build()
+        val photoFile = Helper.customTempFile(applicationContext)
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+
         imageCapture.takePicture(
             outputOptions,
             ContextCompat.getMainExecutor(this),
-            object : ImageCapture.OnImageSavedCallback{
-                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    val savedUri = outputFileResults.savedUri ?: Uri.fromFile(photoFile)
-                    val intent = Intent(this@CameraActivity, UploadActivity::class.java)
-                    intent.putExtra(EXTRA_PHOTO, savedUri)
-                    startActivity(intent)
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    Toast.makeText(
+                        this@CameraActivity,
+                        "Berhasil mengambil gambar.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
+
+                    val intent = Intent()
+                    intent.putExtra(EXTRA_PHOTO, savedUri.toString())
+                    setResult(200, intent)
                     finish()
                 }
-
-                override fun onError(exception: ImageCaptureException) {
+                override fun onError(exc: ImageCaptureException) {
                     Toast.makeText(
                         this@CameraActivity,
                         "Gagal mengambil gambar.",
                         Toast.LENGTH_SHORT
                     ).show()
-                    Log.e(TAG, "onError: ${exception.message}")
+                    Log.e(TAG, "onError: ${exc.message}")
                 }
-
             }
-        )
-    }
+            )
+        }
 
     private fun hideSystemUI() {
         @Suppress("DEPRECATION")

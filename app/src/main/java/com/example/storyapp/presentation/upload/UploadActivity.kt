@@ -1,6 +1,7 @@
 package com.example.storyapp.presentation.upload
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -11,11 +12,13 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.example.storyapp.databinding.ActivityUploadBinding
 import com.example.storyapp.presentation.ViewModelFactory
 import com.example.storyapp.presentation.main.MainActivity
 import com.example.storyapp.util.Constant.EXTRA_PHOTO
+import com.example.storyapp.util.Constant.REQUIRED_PERMISSION
 import com.example.storyapp.util.Helper
 import com.example.storyapp.util.Result
 import okhttp3.MediaType.Companion.toMediaType
@@ -34,10 +37,15 @@ class UploadActivity : AppCompatActivity() {
     private var getFile: File? = null
     private var currentImageUri: Uri? = null
 
+
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        if(!allPermissionsGranted()) {
+            requestPermissionLauncher.launch(REQUIRED_PERMISSION)
+        }
 
         binding.btnGallery.setOnClickListener {
             startGallery()
@@ -46,9 +54,39 @@ class UploadActivity : AppCompatActivity() {
             uploadStories()
         }
         binding.btnCam.setOnClickListener {
+            val intent = Intent(this, CameraActivity::class.java)
+            launcherIntentCamera.launch(intent)
         }
 
     }
+
+    private val launcherIntentCamera = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == 200) {
+            currentImageUri = it.data?.getStringExtra(EXTRA_PHOTO)?.toUri()
+            if (currentImageUri != null) {
+                getFile = Helper.uriToFile(currentImageUri!!, applicationContext)
+            }
+            binding.imgUpload.setImageURI(currentImageUri)
+        }
+    }
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                Toast.makeText(this, "Permission request granted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Permission request denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    private fun allPermissionsGranted() =
+        ContextCompat.checkSelfPermission(
+            this,
+            REQUIRED_PERMISSION
+        ) == PackageManager.PERMISSION_GRANTED
 
     private fun startGallery() {
         val intent = Intent()

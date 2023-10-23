@@ -69,5 +69,10 @@ dependencies {
     implementation("androidx.room:room-ktx:2.5.2")
     //EXIF
     implementation("androidx.exifinterface:exifinterface:1.3.6")
+    //Camera X
+    val cameraxVersion = "1.2.3"
+    implementation("androidx.camera:camera-camera2:$cameraxVersion")
+    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+    implementation("androidx.camera:camera-view:$cameraxVersion")
 
 }

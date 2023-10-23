@@ -1,5 +1,7 @@
 package com.example.storyapp.util
 
+import android.Manifest
+
 object Constant {
 
     const val EXTRA_DETAIL = "EXTRA_DETAIL"
@@ -9,4 +11,5 @@ object Constant {
     const val EXTRA_PHOTO = "PHOTO_RESULT"
     const val TAG = "CameraActivity"
     const val CAMERA_PERMISSION_CODE = 10
+    const val REQUIRED_PERMISSION = Manifest.permission.CAMERA
 }
