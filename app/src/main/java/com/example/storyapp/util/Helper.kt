@@ -1,5 +1,6 @@
 package com.example.storyapp.util
 
+import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -13,6 +14,7 @@ import android.renderscript.ScriptGroup.Input
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import com.example.storyapp.R
 import com.example.storyapp.util.Constant.FILE_FORMAT
 import com.example.storyapp.util.Constant.MAXIMAL_SIZE
 import java.io.ByteArrayOutputStream
@@ -35,8 +37,17 @@ object Helper {
     ).format(System.currentTimeMillis())
 
     fun customTempFile(context: Context): File {
-        val storageDirect: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(timeStampFormat, "jpg", storageDirect)
+        val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(timeStampFormat, "jpg", storageDir)
+    }
+
+    fun createFile(application: Application): File {
+        val mediaDir = application.externalMediaDirs.firstOrNull()?.let {
+            File(it, application.resources.getString(R.string.story_app)).apply { mkdirs() }
+        }
+        val outputDirectory = if (mediaDir != null && mediaDir.exists()
+        ) mediaDir else application.filesDir
+        return File(outputDirectory, "$timeStampFormat.jpg")
     }
 
     fun uriToFile(imageUri: Uri, context: Context): File {

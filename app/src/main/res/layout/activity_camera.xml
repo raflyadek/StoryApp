@@ -6,4 +6,29 @@
     android:layout_height="match_parent"
     tools:context=".presentation.upload.CameraActivity">
 
+    <androidx.camera.view.PreviewView
+        android:id="@+id/viewCam"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ImageView
+        android:id="@+id/iv_capture"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_capture"/>
+
+    <ImageView
+        android:id="@+id/iv_switchCam"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/iv_capture"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:srcCompat="@drawable/ic_switch_camera"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

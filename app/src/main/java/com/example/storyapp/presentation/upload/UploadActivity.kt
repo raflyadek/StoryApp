@@ -17,12 +17,15 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.core.net.toUri
 import com.example.storyapp.R
 import com.example.storyapp.databinding.ActivityUploadBinding
 import com.example.storyapp.presentation.ViewModelFactory
 import com.example.storyapp.presentation.login.LoginViewModel
 import com.example.storyapp.presentation.main.MainViewModel
 import com.example.storyapp.util.Constant
+import com.example.storyapp.util.Constant.CAMERAX_RESULT
+import com.example.storyapp.util.Constant.EXTRA_CAMERAX_IMAGE
 import com.example.storyapp.util.Helper
 import com.example.storyapp.util.Result
 import okhttp3.MediaType.Companion.toMediaType
@@ -51,9 +54,11 @@ class UploadActivity : AppCompatActivity() {
         binding.btnGallery.setOnClickListener {
             startGallery()
         }
-
         binding.btnUpload.setOnClickListener {
             uploadStories()
+        }
+        binding.btnCam.setOnClickListener {
+            startCameraX()
         }
     }
 
@@ -73,6 +78,27 @@ class UploadActivity : AppCompatActivity() {
             val myFile = Helper.uriToFile(selectedImg, this)
             getFile = myFile
             binding.imgUpload.setImageURI(selectedImg)
+        }
+    }
+
+    private fun startCameraX() {
+        val intent = Intent(this, CameraActivity::class.java)
+        launcherIntentCameraX.launch(intent)
+    }
+
+    private val launcherIntentCameraX = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == CAMERAX_RESULT) {
+            currentImageUri = it.data?.getStringExtra(EXTRA_CAMERAX_IMAGE)?.toUri()
+            showImage()
+        }
+    }
+
+    private fun showImage() {
+        currentImageUri?.let {
+            Log.d("Image URI", "showImage: $it")
+            binding.imgUpload.setImageURI(it)
         }
     }
 
