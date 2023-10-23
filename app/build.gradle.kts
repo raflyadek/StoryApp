@@ -65,4 +65,7 @@ dependencies {
     implementation("androidx.room:room-runtime:2.5.2")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("androidx.room:room-ktx:2.5.2")
+    //EXIF
+    implementation("androidx.exifinterface:exifinterface:1.3.6")
+
 }

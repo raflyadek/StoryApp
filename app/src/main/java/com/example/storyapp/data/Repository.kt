@@ -27,7 +27,7 @@ class Repository private constructor(
     ): LiveData<Result<RegisterResponse>> = liveData {
         try {
             val client = apiService.createUser(name, email, password)
-            emit(Result.Success())
+            emit(Result.Success(client))
         } catch (e: Exception) {
             Log.e("SignUpViewModel", "userRegister: ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
@@ -43,7 +43,7 @@ class Repository private constructor(
             val client = apiService.loginUser(email, password)
             val token = client.loginResult.token
             saveSession(token)
-            emit(Result.Success())
+            emit(Result.Success(client))
         } catch (e: Exception) {
             Log.e("LoginViewModel", "userLogin: ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
@@ -54,7 +54,7 @@ class Repository private constructor(
         emit(Result.Loading)
         try {
             val client = apiService.getStories()
-            emit(Result.Success())
+            emit(Result.Success(client))
         } catch (e: Exception) {
             Log.e("MainViewModel", "getStories: ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
@@ -65,7 +65,7 @@ class Repository private constructor(
         emit(Result.Loading)
         try{
             val client = apiService.detailStories(id)
-            emit(Result.Success())
+            emit(Result.Success(client))
         } catch (e: Exception) {
             Log.e("DetailViewModel", "detailStories: ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
@@ -78,7 +78,7 @@ class Repository private constructor(
             emit(Result.Loading)
         try {
             val client = apiService.uploadStory(file, description)
-            emit(Result.Success())
+            emit(Result.Success(client))
         } catch (e: Exception) {
             Log.e("UploadViewModel", "uploadStories: ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
