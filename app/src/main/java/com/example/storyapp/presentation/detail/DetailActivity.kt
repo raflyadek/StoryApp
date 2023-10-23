@@ -23,6 +23,12 @@ class DetailActivity : AppCompatActivity() {
 
         val id = intent.getStringExtra(EXTRA_DETAIL) ?: ""
         observeViewModel(id)
+
+        setSupportActionBar(binding.toolbar)
+        with(supportActionBar!!) {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
