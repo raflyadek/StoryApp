@@ -21,11 +21,14 @@ import com.example.storyapp.presentation.login.LoginViewModel
 import com.example.storyapp.presentation.map.MapActivity
 import com.example.storyapp.presentation.signup.SignupViewModel
 import com.example.storyapp.presentation.upload.UploadActivity
+import com.example.storyapp.presentation.welcome.WelcomeActivity
 import com.example.storyapp.util.Result
 
 class MainActivity : AppCompatActivity() {
 
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val binding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
     private val viewModel by viewModels<MainViewModel> {
         ViewModelFactory.getInstance(this)
     }
@@ -33,30 +36,34 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        setupToolbar()
         observeViewModel()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            R.id.logout_menu -> {
-                viewModel.logout()
-            }
-            R.id.map_menu -> {
-                val intent = Intent(this, MapActivity::class.java)
-                startActivity(intent)
-            }
-            R.id.upload_menu -> {
-                val intent = Intent(this, UploadActivity::class.java)
-                startActivity(intent)
+
+    fun setupToolbar(){
+        binding.toolbar.inflateMenu(R.menu.main_menu)
+        binding.toolbar.setOnMenuItemClickListener {
+            when(it.itemId) {
+                R.id.logout_menu -> {
+                    viewModel.logout()
+                    val intent = Intent(this, WelcomeActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.map_menu -> {
+                    Toast.makeText(this, "Feature map untuk submission 2", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.upload_menu -> {
+                    val intent = Intent(this, UploadActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                else -> false
             }
         }
-        return super.onOptionsItemSelected(item)
     }
-
 
     private fun observeViewModel() {
         viewModel.getStories().observe(this) { result ->
