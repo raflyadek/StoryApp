@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
             when(it.itemId) {
                 R.id.logout_menu -> {
                     viewModel.logout()
+                    Toast.makeText(this, "Berhasil keluar", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, WelcomeActivity::class.java)
                     startActivity(intent)
                     true

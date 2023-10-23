@@ -1,10 +1,6 @@
 package com.example.storyapp.presentation.upload
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Matrix
-import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -12,20 +8,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
-import com.example.storyapp.R
 import com.example.storyapp.databinding.ActivityUploadBinding
 import com.example.storyapp.presentation.ViewModelFactory
-import com.example.storyapp.presentation.login.LoginViewModel
-import com.example.storyapp.presentation.main.MainViewModel
-import com.example.storyapp.util.Constant
-import com.example.storyapp.util.Constant.CAMERAX_RESULT
-import com.example.storyapp.util.Constant.EXTRA_CAMERAX_IMAGE
+import com.example.storyapp.presentation.main.MainActivity
+import com.example.storyapp.util.Constant.EXTRA_PHOTO
 import com.example.storyapp.util.Helper
 import com.example.storyapp.util.Result
 import okhttp3.MediaType.Companion.toMediaType
@@ -34,18 +24,14 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileOutputStream
 
 class UploadActivity : AppCompatActivity() {
     private val binding by lazy { ActivityUploadBinding.inflate(layoutInflater) }
     private val viewModel by viewModels<UploadViewModel> {
         ViewModelFactory.getInstance(this)
     }
-    private var currentImageUri: Uri? = null
     private var getFile: File? = null
-
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,9 +44,11 @@ class UploadActivity : AppCompatActivity() {
             uploadStories()
         }
         binding.btnCam.setOnClickListener {
-            startCameraX()
         }
+
     }
+
+
 
     private fun startGallery() {
         val intent = Intent()
@@ -78,27 +66,6 @@ class UploadActivity : AppCompatActivity() {
             val myFile = Helper.uriToFile(selectedImg, this)
             getFile = myFile
             binding.imgUpload.setImageURI(selectedImg)
-        }
-    }
-
-    private fun startCameraX() {
-        val intent = Intent(this, CameraActivity::class.java)
-        launcherIntentCameraX.launch(intent)
-    }
-
-    private val launcherIntentCameraX = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) {
-        if (it.resultCode == CAMERAX_RESULT) {
-            currentImageUri = it.data?.getStringExtra(EXTRA_CAMERAX_IMAGE)?.toUri()
-            showImage()
-        }
-    }
-
-    private fun showImage() {
-        currentImageUri?.let {
-            Log.d("Image URI", "showImage: $it")
-            binding.imgUpload.setImageURI(it)
         }
     }
 
@@ -130,6 +97,9 @@ class UploadActivity : AppCompatActivity() {
                     is Result.Success -> {
                         showLoading(false)
                         Toast.makeText(this, "Story Uploaded", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, MainActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
                     }
                     is Result.Error -> {
                         showLoading(false)

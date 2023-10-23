@@ -16,10 +16,8 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
-import com.example.storyapp.R
 import com.example.storyapp.databinding.ActivityCameraBinding
-import com.example.storyapp.util.Constant.CAMERAX_RESULT
-import com.example.storyapp.util.Constant.EXTRA_CAMERAX_IMAGE
+import com.example.storyapp.util.Constant.EXTRA_PHOTO
 import com.example.storyapp.util.Constant.TAG
 import com.example.storyapp.util.Helper
 
@@ -93,9 +91,9 @@ class CameraActivity : AppCompatActivity() {
             ContextCompat.getMainExecutor(this),
             object : ImageCapture.OnImageSavedCallback{
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    val intent = Intent()
-                    intent.putExtra(EXTRA_CAMERAX_IMAGE, outputFileResults.savedUri.toString())
-                    setResult(CAMERAX_RESULT, intent)
+                    val intent = Intent(this@CameraActivity, UploadActivity::class.java)
+                    intent.putExtra(EXTRA_PHOTO, photoFile)
+                    startActivity(intent)
                     finish()
                 }
 
