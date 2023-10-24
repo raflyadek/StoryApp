@@ -76,29 +76,6 @@ class SignupActivity : AppCompatActivity() {
             }
             observeViewModel(name, email, password)
         }
-        etPassword = binding.passwordEditText
-        val maxLength = 8
-        val inputFilterArray = arrayOfNulls<InputFilter>(1)
-        inputFilterArray[0] = InputFilter.LengthFilter(maxLength)
-        etPassword.filters = inputFilterArray
-        etPassword.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-
-                val password = p0.toString().trim()
-                if (password.length < maxLength) {
-                    etPassword.error = getString(R.string.password_8_character)
-                } else {
-                    etPassword.error = null
-                }
-            }
-
-        })
     }
 
     private fun observeViewModel(
