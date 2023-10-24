@@ -56,24 +56,6 @@ class SignupActivity : AppCompatActivity() {
             val name = binding.nameEditText.text.toString()
             val email = binding.emailEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
-
-            if(email.isEmpty()){
-                binding.emailEditText.error = "Email required"
-                binding.emailEditText.requestFocus()
-                return@setOnClickListener
-            }
-
-            if(name.isEmpty()) {
-                binding.nameEditText.error = "Name required"
-                binding.nameEditText.requestFocus()
-                return@setOnClickListener
-            }
-
-            if(password.isEmpty()) {
-                binding.passwordEditText.error = "password required"
-                binding.passwordEditText.requestFocus()
-                return@setOnClickListener
-            }
             observeViewModel(name, email, password)
         }
     }

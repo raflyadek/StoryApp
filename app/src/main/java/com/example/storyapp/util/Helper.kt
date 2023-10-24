@@ -29,54 +29,14 @@ import java.util.Locale
 
 object Helper {
 
-    fun permissionGranted(context: Context, permissions: String) =
-        ContextCompat.checkSelfPermission(
-            context, permissions
-        ) == PackageManager.PERMISSION_GRANTED
-
     val timeStampFormat: String = SimpleDateFormat(
         FILENAME_FORMAT,
         Locale.US
     ).format(Date())
 
-    fun getImageUri(context: Context): Uri {
-        var uri: Uri? = null
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val contentValues = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, "$timeStampFormat.jpg")
-                put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-                put(MediaStore.MediaColumns.RELATIVE_PATH, "Pictures/MyCamera/")
-            }
-            uri = context.contentResolver.insert(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues
-            )
-        }
-        return uri ?: getImageForPreQ(context)
-    }
-
-    private fun getImageForPreQ(context: Context): Uri {
-        val filesDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        val imageFile = File(filesDir, "/MyCamera/$timeStampFormat.jpg")
-        if (imageFile.parentFile.exists() == false) imageFile.parentFile?.mkdir()
-        return FileProvider.getUriForFile(
-            context, "${BuildConfig.APPLICATION_ID}.fileprovider",imageFile
-        )
-
-    }
-
     fun customTempFile(context: Context): File {
-        val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(timeStampFormat, "jpg", storageDir)
-    }
-
-    fun createFile(application: Application): File {
-        val mediaDir = application.externalMediaDirs.firstOrNull()?.let {
-            File(it, application.resources.getString(R.string.story_app)).apply { mkdirs() }
-        }
-        val outputDirectory = if (mediaDir != null && mediaDir.exists()
-        ) mediaDir else application.filesDir
-        return File(outputDirectory, "$timeStampFormat.jpg")
+        val filesDir = context.externalCacheDir
+        return File.createTempFile(timeStampFormat, "jpg", filesDir)
     }
 
     fun uriToFile(imageUri: Uri, context: Context): File {

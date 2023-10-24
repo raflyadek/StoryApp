@@ -54,10 +54,20 @@ class UploadActivity : AppCompatActivity() {
             uploadStories()
         }
         binding.btnCam.setOnClickListener {
-            val intent = Intent(this, CameraActivity::class.java)
-            launcherIntentCamera.launch(intent)
+            startCameraX()
         }
 
+    }
+
+    private fun allPermissionsGranted() =
+        ContextCompat.checkSelfPermission(
+            this,
+            REQUIRED_PERMISSION
+        ) == PackageManager.PERMISSION_GRANTED
+
+    private fun startCameraX() {
+        val intent = Intent(this, CameraActivity::class.java)
+        launcherIntentCamera.launch(intent)
     }
 
     private val launcherIntentCamera = registerForActivityResult(
@@ -71,6 +81,7 @@ class UploadActivity : AppCompatActivity() {
             binding.imgUpload.setImageURI(currentImageUri)
         }
     }
+
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -82,11 +93,6 @@ class UploadActivity : AppCompatActivity() {
             }
         }
 
-    private fun allPermissionsGranted() =
-        ContextCompat.checkSelfPermission(
-            this,
-            REQUIRED_PERMISSION
-        ) == PackageManager.PERMISSION_GRANTED
 
     private fun startGallery() {
         val intent = Intent()

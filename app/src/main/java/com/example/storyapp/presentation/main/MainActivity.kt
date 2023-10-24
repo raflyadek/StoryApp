@@ -22,6 +22,7 @@ import com.example.storyapp.presentation.map.MapActivity
 import com.example.storyapp.presentation.signup.SignupViewModel
 import com.example.storyapp.presentation.upload.UploadActivity
 import com.example.storyapp.presentation.welcome.WelcomeActivity
+import com.example.storyapp.util.Constant.EXTRA_TOKEN
 import com.example.storyapp.util.Result
 
 class MainActivity : AppCompatActivity() {
@@ -35,9 +36,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        val token = intent.getStringExtra(EXTRA_TOKEN) ?: ""
 
         setupToolbar()
-        observeViewModel()
+        observeViewModel(token)
     }
 
 
@@ -66,8 +68,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeViewModel() {
-        viewModel.getStories().observe(this) { result ->
+    private fun observeViewModel(token: String) {
+        viewModel.getStories(token).observe(this) { result ->
             if (result != null) {
                 when(result) {
                     Result.Loading -> showLoading(true)

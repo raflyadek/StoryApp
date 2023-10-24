@@ -31,7 +31,6 @@ class LoginActivity : AppCompatActivity() {
     private val viewModel by viewModels<LoginViewModel> {
         ViewModelFactory.getInstance(this)
     }
-    private lateinit var etPassword: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)

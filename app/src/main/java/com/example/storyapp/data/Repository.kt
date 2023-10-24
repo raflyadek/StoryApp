@@ -50,7 +50,7 @@ class Repository private constructor(
         }
     }
 
-    fun getStories(): LiveData<Result<ListStoryResponse>> = liveData {
+    fun getStories(token: String): LiveData<Result<ListStoryResponse>> = liveData {
         emit(Result.Loading)
         try {
             val client = apiService.getStories()

@@ -92,11 +92,8 @@ class CameraActivity : AppCompatActivity() {
                         "Berhasil mengambil gambar.",
                         Toast.LENGTH_SHORT
                     ).show()
-
-                    val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
-
                     val intent = Intent()
-                    intent.putExtra(EXTRA_PHOTO, savedUri.toString())
+                    intent.putExtra(EXTRA_PHOTO, output.savedUri.toString())
                     setResult(200, intent)
                     finish()
                 }
@@ -111,19 +108,6 @@ class CameraActivity : AppCompatActivity() {
             }
             )
         }
-
-    private fun hideSystemUI() {
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-        }
-        supportActionBar?.hide()
-    }
 
     private val orientationEventListener by lazy {
         object : OrientationEventListener(this) {
