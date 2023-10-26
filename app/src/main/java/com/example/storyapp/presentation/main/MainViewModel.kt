@@ -19,7 +19,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun getStories(token: String): LiveData<Result<ListStoryResponse>> =
-        repository.getStories(token)
+    fun getStories(): LiveData<Result<ListStoryResponse>> =
+        repository.getStories()
 
 }

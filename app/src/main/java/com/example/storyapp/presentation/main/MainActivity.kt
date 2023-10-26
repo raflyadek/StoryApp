@@ -3,8 +3,6 @@ package com.example.storyapp.presentation.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.example.storyapp.util.Constant.EXTRA_DETAIL
@@ -17,9 +15,6 @@ import com.example.storyapp.databinding.ActivityMainBinding
 import com.example.storyapp.presentation.ViewModelFactory
 import com.example.storyapp.presentation.adapter.ListStoryAdapter
 import com.example.storyapp.presentation.detail.DetailActivity
-import com.example.storyapp.presentation.login.LoginViewModel
-import com.example.storyapp.presentation.map.MapActivity
-import com.example.storyapp.presentation.signup.SignupViewModel
 import com.example.storyapp.presentation.upload.UploadActivity
 import com.example.storyapp.presentation.welcome.WelcomeActivity
 import com.example.storyapp.util.Constant.EXTRA_TOKEN
@@ -36,14 +31,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        val token = intent.getStringExtra(EXTRA_TOKEN) ?: ""
 
+        observeViewModel()
         setupToolbar()
-        observeViewModel(token)
     }
 
 
-    fun setupToolbar(){
+    private fun setupToolbar(){
         binding.toolbar.inflateMenu(R.menu.main_menu)
         binding.toolbar.setOnMenuItemClickListener {
             when(it.itemId) {
@@ -68,8 +62,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeViewModel(token: String) {
-        viewModel.getStories(token).observe(this) { result ->
+    private fun observeViewModel() {
+        viewModel.getStories().observe(this) { result ->
             if (result != null) {
                 when(result) {
                     Result.Loading -> showLoading(true)
@@ -86,19 +80,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showStory(listStory: List<Story>) {
-        if (listStory != null) {
-            setupRecyclerView()
+        setupRecyclerView()
 
-            val adapter = ListStoryAdapter(listStory)
-            binding.rvStory.adapter = adapter
-            adapter.setOnItemClickCallback(object : ListStoryAdapter.OnItemClickCallback{
-                override fun onItemClicked(data: Story) {
-                    val intentToDetail = Intent (this@MainActivity, DetailActivity::class.java)
-                    intentToDetail.putExtra(EXTRA_DETAIL, data.id)
-                    startActivity(intentToDetail)
-                }
-            })
-        }
+        val adapter = ListStoryAdapter(listStory)
+        binding.rvStory.adapter = adapter
+        adapter.setOnItemClickCallback(object : ListStoryAdapter.OnItemClickCallback{
+            override fun onItemClicked(data: Story) {
+                val intentToDetail = Intent (this@MainActivity, DetailActivity::class.java)
+                intentToDetail.putExtra(EXTRA_DETAIL, data.id)
+                startActivity(intentToDetail)
+            }
+        })
 
     }
 

@@ -77,7 +77,6 @@ class LoginActivity : AppCompatActivity() {
                             setMessage("Anda berhasil login.")
                             setPositiveButton("Next") {_, _ ->
                                 val intent = Intent(context, MainActivity::class.java)
-                                intent.putExtra(EXTRA_TOKEN, result.data.loginResult.token)
                                 startActivity(intent)
                                 finish()
                             }

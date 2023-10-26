@@ -35,13 +35,12 @@ class SplashActivity : AppCompatActivity() {
     private fun observeViewModel() {
         Handler(Looper.getMainLooper()).postDelayed({
             viewModel.getSession().observe(this) { token ->
-                if (token == null) {
+                if (token.isNullOrEmpty()) {
                     val intent = Intent(this, WelcomeActivity::class.java)
                     startActivity(intent)
                     finish()
                 } else {
                     val intent = Intent(this, MainActivity::class.java)
-                    intent.putExtra(EXTRA_TOKEN, token)
                     startActivity(intent)
                     finish()
                 }
