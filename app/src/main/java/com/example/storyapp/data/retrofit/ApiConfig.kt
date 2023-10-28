@@ -16,8 +16,11 @@ class ApiConfig {
         fun getApiService(context: Context): ApiService {
             val pref = UserPreference.getInstance(context.dataStore)
             val token = runBlocking { pref.getSession().first() }
-            val loggingInterceptor =
+            val loggingInterceptor = if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+            } else {
+                HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.NONE)
+            }
             val authInterceptor = Interceptor { chain ->
                 val req = chain.request()
                 val requestHeaders = req.newBuilder()

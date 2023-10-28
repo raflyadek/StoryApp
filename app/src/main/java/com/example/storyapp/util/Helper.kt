@@ -1,24 +1,15 @@
 package com.example.storyapp.util
 
-import android.app.Application
-import android.content.ContentValues
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
-import android.os.Environment
-import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
-import com.example.storyapp.R
 import com.example.storyapp.util.Constant.FILENAME_FORMAT
 import com.example.storyapp.util.Constant.MAXIMAL_SIZE
-import com.loopj.android.http.BuildConfig
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -35,57 +26,57 @@ object Helper {
     ).format(Date())
 
     fun customTempFile(context: Context): File {
-        val filesDir = context.externalCacheDir
-        return File.createTempFile(timeStampFormat, "jpg", filesDir)
+        val fileDir = context.externalCacheDir
+        return File.createTempFile(timeStampFormat, "jpg", fileDir)
     }
 
-    fun uriToFile(imageUri: Uri, context: Context): File {
-        val myFile = customTempFile(context)
-        val inputStream = context.contentResolver.openInputStream(imageUri) as InputStream
-        val outputStream = FileOutputStream(myFile)
-        val buffer = ByteArray(1024)
+    fun convertUriToFile(imageUri: Uri, context: Context): File {
+        val file = customTempFile(context)
+        val streamInput = context.contentResolver.openInputStream(imageUri) as InputStream
+        val streamOutput = FileOutputStream(file)
+        val bufferSize = ByteArray(1024)
         var length: Int
-        while (inputStream.read(buffer).also {
-                length = it } > 0) outputStream.write(
-            buffer, 0, length)
-        outputStream.close()
-        inputStream.close()
-        return myFile
+        while (streamInput.read(bufferSize).also {
+                length = it } > 0) streamOutput.write(
+            bufferSize, 0, length)
+        streamOutput.close()
+        streamInput.close()
+        return file
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    fun reduceFile(file: File): File {
-        val bitmap = BitmapFactory.decodeFile(file.path).getRotatedBitmap(file)
-        var compressQuality = 100
-        var streamLength: Int
+    fun reduceFileSize(file: File): File {
+        val bitmapFile = BitmapFactory.decodeFile(file.path).getRotatedBitmap(file)
+        var qualityCompress = 100
+        var lengthStream: Int
         do {
             val bmpStream = ByteArrayOutputStream()
-            bitmap.compress(
-                Bitmap.CompressFormat.JPEG, compressQuality, bmpStream)
+            bitmapFile.compress(
+                Bitmap.CompressFormat.JPEG, qualityCompress, bmpStream)
             val bmpPicByteArray = bmpStream.toByteArray()
-            streamLength = bmpPicByteArray.size
-            compressQuality -= 5
-        } while (streamLength > MAXIMAL_SIZE)
-        bitmap.compress(
-            Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
+            lengthStream = bmpPicByteArray.size
+            qualityCompress -= 5
+        } while (lengthStream > MAXIMAL_SIZE)
+        bitmapFile.compress(
+            Bitmap.CompressFormat.JPEG, qualityCompress, FileOutputStream(file))
         return file
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     fun Bitmap.getRotatedBitmap(file: File): Bitmap {
-        val orientation = ExifInterface(file).getAttributeInt(
+        val orientat = ExifInterface(file).getAttributeInt(
             ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED
         )
-        return when (orientation) {
-            ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(this, 90F)
-            ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(this, 180F)
-            ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(this, 270F)
+        return when (orientat) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> imageRotate(this, 90F)
+            ExifInterface.ORIENTATION_ROTATE_180 -> imageRotate(this, 180F)
+            ExifInterface.ORIENTATION_ROTATE_270 -> imageRotate(this, 270F)
             ExifInterface.ORIENTATION_NORMAL -> this
             else -> this
         }
     }
 
-    fun rotateImage(source: Bitmap, angle: Float): Bitmap {
+    fun imageRotate(source: Bitmap, angle: Float): Bitmap {
         val matrix = Matrix()
         matrix.postRotate(angle)
         return Bitmap.createBitmap(

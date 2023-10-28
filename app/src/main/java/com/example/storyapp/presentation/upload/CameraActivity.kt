@@ -1,15 +1,11 @@
 package com.example.storyapp.presentation.upload
 
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.OrientationEventListener
 import android.view.Surface
-import android.view.WindowInsets
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -26,50 +22,50 @@ class CameraActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityCameraBinding.inflate(layoutInflater)
     }
-    private var cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-    private var imageCapture: ImageCapture? = null
+    private var camSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+    private var imgCapture: ImageCapture? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        startCamera()
+        startCamX()
 
         binding.ivSwitchCam.setOnClickListener {
-            cameraSelector =
-                if (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) CameraSelector.DEFAULT_FRONT_CAMERA
+            camSelector =
+                if (camSelector == CameraSelector.DEFAULT_BACK_CAMERA) CameraSelector.DEFAULT_FRONT_CAMERA
             else CameraSelector.DEFAULT_BACK_CAMERA
-            startCamera()
+            startCamX()
         }
         binding.ivCapture.setOnClickListener {
-            takePhoto()
+            takeImgX()
         }
     }
 
-    private fun startCamera() {
+    private fun startCamX() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({
-            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
-            val preview = Preview.Builder()
+            val camProvider: ProcessCameraProvider = cameraProviderFuture.get()
+            val previewImg = Preview.Builder()
                 .build()
                 .also {
                     it.setSurfaceProvider(binding.viewCam.surfaceProvider)
                 }
 
-            imageCapture = ImageCapture.Builder().build()
+            imgCapture = ImageCapture.Builder().build()
 
             try {
-                cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(
+                camProvider.unbindAll()
+                camProvider.bindToLifecycle(
                     this,
-                    cameraSelector,
-                    preview,
-                    imageCapture
+                    camSelector,
+                    previewImg,
+                    imgCapture
                 )
 
             } catch (exc: Exception) {
                 Toast.makeText(
                     this@CameraActivity,
-                    "Gagal memunculkan kamera.",
+                    "Gagal membuka kamera",
                     Toast.LENGTH_SHORT
                 ).show()
                 Log.e(TAG, "startCamera: ${exc.message}")
@@ -77,19 +73,19 @@ class CameraActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
-    private fun takePhoto() {
-        val imageCapture = imageCapture ?: return
-        val photoFile = Helper.customTempFile(applicationContext)
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+    private fun takeImgX() {
+        val imgCapture = imgCapture ?: return
+        val imgFile = Helper.customTempFile(applicationContext)
+        val imgFileOptions = ImageCapture.OutputFileOptions.Builder(imgFile).build()
 
-        imageCapture.takePicture(
-            outputOptions,
+        imgCapture.takePicture(
+            imgFileOptions,
             ContextCompat.getMainExecutor(this),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     Toast.makeText(
                         this@CameraActivity,
-                        "Berhasil mengambil gambar.",
+                        "Success to take picture.",
                         Toast.LENGTH_SHORT
                     ).show()
                     val intent = Intent()
@@ -100,7 +96,7 @@ class CameraActivity : AppCompatActivity() {
                 override fun onError(exc: ImageCaptureException) {
                     Toast.makeText(
                         this@CameraActivity,
-                        "Gagal mengambil gambar.",
+                        "Failed to take picture.",
                         Toast.LENGTH_SHORT
                     ).show()
                     Log.e(TAG, "onError: ${exc.message}")
@@ -121,7 +117,7 @@ class CameraActivity : AppCompatActivity() {
                     in 225 until 315 -> Surface.ROTATION_90
                     else -> Surface.ROTATION_0
                 }
-                imageCapture?.targetRotation = rotation
+                imgCapture?.targetRotation = rotation
             }
         }
     }

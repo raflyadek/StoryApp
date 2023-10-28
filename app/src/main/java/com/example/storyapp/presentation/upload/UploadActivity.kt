@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -34,8 +33,8 @@ class UploadActivity : AppCompatActivity() {
     private val viewModel by viewModels<UploadViewModel> {
         ViewModelFactory.getInstance(this)
     }
-    private var getFile: File? = null
-    private var currentImageUri: Uri? = null
+    private var gotFiles: File? = null
+    private var imgCurrentUri: Uri? = null
 
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -43,46 +42,46 @@ class UploadActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        if(!allPermissionsGranted()) {
-            requestPermissionLauncher.launch(REQUIRED_PERMISSION)
+        if(!permissionGranted()) {
+            reqPermissionLauncher.launch(REQUIRED_PERMISSION)
         }
 
         binding.btnGallery.setOnClickListener {
-            startGallery()
+            galleryLauncher()
         }
         binding.btnUpload.setOnClickListener {
-            uploadStories()
+            storiesUpload()
         }
         binding.btnCam.setOnClickListener {
-            startCameraX()
+            startCamX()
         }
 
     }
 
-    private fun allPermissionsGranted() =
+    private fun permissionGranted() =
         ContextCompat.checkSelfPermission(
             this,
             REQUIRED_PERMISSION
         ) == PackageManager.PERMISSION_GRANTED
 
-    private fun startCameraX() {
+    private fun startCamX() {
         val intent = Intent(this, CameraActivity::class.java)
-        launcherIntentCamera.launch(intent)
+        intentLauncherCam.launch(intent)
     }
 
-    private val launcherIntentCamera = registerForActivityResult(
+    private val intentLauncherCam = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
         if (it.resultCode == 200) {
-            currentImageUri = it.data?.getStringExtra(EXTRA_PHOTO)?.toUri()
-            if (currentImageUri != null) {
-                getFile = Helper.uriToFile(currentImageUri!!, applicationContext)
+            imgCurrentUri = it.data?.getStringExtra(EXTRA_PHOTO)?.toUri()
+            if (imgCurrentUri != null) {
+                gotFiles = Helper.convertUriToFile(imgCurrentUri!!, applicationContext)
             }
-            binding.imgUpload.setImageURI(currentImageUri)
+            binding.imgUpload.setImageURI(imgCurrentUri)
         }
     }
 
-    private val requestPermissionLauncher =
+    private val reqPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
@@ -94,37 +93,37 @@ class UploadActivity : AppCompatActivity() {
         }
 
 
-    private fun startGallery() {
+    private fun galleryLauncher() {
         val intent = Intent()
         intent.action = Intent.ACTION_GET_CONTENT
         intent.type = "image/*"
-        val chooser = Intent.createChooser(intent, "Pilih Gambar")
-        launcherIntentGallery.launch(chooser)
+        val createChooser = Intent.createChooser(intent, "Pilih Gambar")
+        intentLauncherGallery.launch(createChooser)
     }
 
-    private val launcherIntentGallery = registerForActivityResult(
+    private val intentLauncherGallery = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            val selectedImg: Uri = result.data?.data as Uri
-            val myFile = Helper.uriToFile(selectedImg, this)
-            getFile = myFile
-            binding.imgUpload.setImageURI(selectedImg)
+            val imgSelected: Uri = result.data?.data as Uri
+            val galleryFile = Helper.convertUriToFile(imgSelected, this)
+            gotFiles = galleryFile
+            binding.imgUpload.setImageURI(imgSelected)
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    private fun uploadStories() {
-        if (getFile != null) {
+    private fun storiesUpload() {
+        if (gotFiles != null) {
             showLoading(true)
-            val file = Helper.reduceFile(getFile as File)
-            val description = binding.edDescription.text
-            if (!description.isNullOrEmpty()) {
-                val descriptionText = description.toString().toRequestBody("text/plain".toMediaType())
-                val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+            val fileStories = Helper.reduceFileSize(gotFiles as File)
+            val descriptionStories = binding.edDescription.text
+            if (!descriptionStories.isNullOrEmpty()) {
+                val descriptionText = descriptionStories.toString().toRequestBody("text/plain".toMediaType())
+                val requestImageFile = fileStories.asRequestBody("image/jpeg".toMediaTypeOrNull())
                 val imageMultiPart: MultipartBody.Part = MultipartBody.Part.createFormData(
                     "photo",
-                    file.name,
+                    fileStories.name,
                     requestImageFile
                 )
                 observeViewModel(imageMultiPart, descriptionText)
