@@ -3,9 +3,7 @@ package com.example.storyapp.data
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
-import androidx.lifecycle.asLiveData
 import com.example.storyapp.data.preference.PrefManager
-import com.example.storyapp.data.preference.UserPreference
 import com.example.storyapp.data.remote.DetailResponse
 import com.example.storyapp.data.remote.ListStoryResponse
 import com.example.storyapp.data.remote.LoginResponse
