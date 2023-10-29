@@ -9,7 +9,6 @@ import com.example.storyapp.presentation.detail.DetailViewModel
 import com.example.storyapp.presentation.login.LoginViewModel
 import com.example.storyapp.presentation.main.MainViewModel
 import com.example.storyapp.presentation.signup.SignupViewModel
-import com.example.storyapp.presentation.splash.SplashViewModel
 import com.example.storyapp.presentation.upload.UploadViewModel
 import java.lang.IllegalArgumentException
 
@@ -26,9 +25,6 @@ class ViewModelFactory(private val repository: Repository) : ViewModelProvider.N
             }
             modelClass.isAssignableFrom(SignupViewModel::class.java) -> {
                 SignupViewModel(repository) as T
-            }
-            modelClass.isAssignableFrom(SplashViewModel::class.java) -> {
-                SplashViewModel(repository) as T
             }
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
                 DetailViewModel(repository) as T

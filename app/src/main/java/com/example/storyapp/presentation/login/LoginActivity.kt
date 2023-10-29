@@ -6,24 +6,15 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.InputFilter
-import android.text.TextWatcher
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import com.example.storyapp.R
-import com.example.storyapp.data.Repository
-import com.example.storyapp.data.preference.UserPreference
-import com.example.storyapp.data.remote.LoginResponse
+import com.example.storyapp.data.preference.PrefManager
 import com.example.storyapp.databinding.ActivityLoginBinding
 import com.example.storyapp.presentation.ViewModelFactory
 import com.example.storyapp.presentation.main.MainActivity
-import com.example.storyapp.util.Constant.EXTRA_TOKEN
 import com.example.storyapp.util.Result
 
 class LoginActivity : AppCompatActivity() {
@@ -77,6 +68,8 @@ class LoginActivity : AppCompatActivity() {
                             setTitle("Berhasil!")
                             setMessage("Anda berhasil login.")
                             setPositiveButton("Next") {_, _ ->
+                                PrefManager.init(this@LoginActivity)
+                                PrefManager.TOKEN = result.data.loginResult.token
                                 val intent = Intent(context, MainActivity::class.java)
                                 startActivity(intent)
                                 finish()

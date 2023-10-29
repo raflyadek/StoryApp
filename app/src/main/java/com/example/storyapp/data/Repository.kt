@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.asLiveData
+import com.example.storyapp.data.preference.PrefManager
 import com.example.storyapp.data.preference.UserPreference
 import com.example.storyapp.data.remote.DetailResponse
 import com.example.storyapp.data.remote.ListStoryResponse
@@ -17,8 +18,7 @@ import okhttp3.RequestBody
 
 class Repository private constructor(
     private val apiService: ApiService,
-    private val userPref: UserPreference
-) {
+    ) {
 
     fun userRegister(
         name: String,
@@ -41,8 +41,6 @@ class Repository private constructor(
         emit(Result.Loading)
         try {
             val client = apiService.loginUser(email, password)
-            val token = client.loginResult.token
-            saveSession(token)
             emit(Result.Success(client))
         } catch (e: Exception) {
             Log.e("LoginViewModel", "userLogin: ${e.message.toString()}")
@@ -84,16 +82,9 @@ class Repository private constructor(
             emit(Result.Error(e.message.toString()))
         }
     }
-    suspend fun clearSession() {
-        return userPref.clearSession()
-    }
 
-    fun getSession() : LiveData<String?> {
-        return userPref.getSession().asLiveData()
-    }
-
-    suspend fun saveSession(userToken: String) {
-        return userPref.saveSession(userToken)
+    fun clearSession() {
+        return PrefManager.clearAllData()
     }
 
     companion object {
@@ -101,10 +92,9 @@ class Repository private constructor(
         private var instance: Repository? = null
         fun getInstance(
             apiService: ApiService,
-            userPref: UserPreference
         ): Repository =
             instance ?: synchronized(this) {
-                instance ?: Repository(apiService, userPref)
+                instance ?: Repository(apiService)
             }.also { instance = it }
     }
 }

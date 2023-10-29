@@ -28,9 +28,9 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         }
 
     suspend fun getSessionToken(): String? {
-
+        val preferences = dataStore.data.first()
+        return preferences[TOKEN_KEY]
     }
-
     suspend fun clearSession() {
         dataStore.edit { preferences ->
             preferences.clear()

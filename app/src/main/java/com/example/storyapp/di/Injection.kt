@@ -10,8 +10,7 @@ import kotlinx.coroutines.runBlocking
 
 object Injection {
     fun provideRepository(context: Context): Repository {
-        val pref = UserPreference.getInstance(context.dataStore)
         val apiService = ApiConfig.getApiService(context)
-        return Repository.getInstance(apiService, pref)
+        return Repository.getInstance(apiService)
     }
 }

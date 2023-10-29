@@ -7,13 +7,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.activity.viewModels
-import com.example.storyapp.R
+import com.example.storyapp.data.preference.PrefManager
 import com.example.storyapp.databinding.ActivitySplashBinding
 import com.example.storyapp.presentation.ViewModelFactory
-import com.example.storyapp.presentation.login.LoginViewModel
 import com.example.storyapp.presentation.main.MainActivity
 import com.example.storyapp.presentation.welcome.WelcomeActivity
-import com.example.storyapp.util.Constant.EXTRA_TOKEN
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
@@ -21,21 +19,17 @@ class SplashActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivitySplashBinding.inflate(layoutInflater)
     }
-    private val viewModel by viewModels<SplashViewModel> {
-        ViewModelFactory.getInstance(this)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        observeViewModel()
+        action()
     }
 
-    private fun observeViewModel() {
+    private fun action() {
+        PrefManager.init(this)
         Handler(Looper.getMainLooper()).postDelayed({
-            viewModel.getSession().observe(this) { token ->
-                if (token.isNullOrEmpty()) {
+                if (PrefManager.TOKEN != null) {
                     val intent = Intent(this, WelcomeActivity::class.java)
                     startActivity(intent)
                     finish()
@@ -44,7 +38,6 @@ class SplashActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 }
-            }
-        }, 500)
+            }, 500)
+        }
     }
-}

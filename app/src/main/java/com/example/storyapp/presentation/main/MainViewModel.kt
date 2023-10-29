@@ -14,9 +14,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: Repository) : ViewModel() {
     fun logout() {
-        viewModelScope.launch {
-            repository.clearSession()
-        }
+        repository.clearSession()
     }
 
     fun getStories(): LiveData<Result<ListStoryResponse>> =

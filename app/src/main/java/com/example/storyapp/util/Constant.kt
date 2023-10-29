@@ -1,6 +1,7 @@
 package com.example.storyapp.util
 
 import android.Manifest
+import android.content.Context
 
 object Constant {
 
@@ -12,4 +13,6 @@ object Constant {
     const val TAG = "CameraActivity"
     const val CAMERA_PERMISSION_CODE = 10
     const val REQUIRED_PERMISSION = Manifest.permission.CAMERA
+    const val PREF_NAME = "story-app-database"
+    const val MODE = Context.MODE_PRIVATE
 }
