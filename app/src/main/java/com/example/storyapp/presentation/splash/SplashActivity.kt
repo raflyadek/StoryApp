@@ -29,7 +29,7 @@ class SplashActivity : AppCompatActivity() {
     private fun action() {
         PrefManager.init(this)
         Handler(Looper.getMainLooper()).postDelayed({
-                if (PrefManager.TOKEN != null) {
+                if (PrefManager.TOKEN == "") {
                     val intent = Intent(this, WelcomeActivity::class.java)
                     startActivity(intent)
                     finish()
