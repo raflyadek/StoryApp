@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         adapter.setOnItemClickCallback(object : ListStoryAdapter.OnItemClickCallback{
             override fun onItemClicked(data: Story) {
                 val intentToDetail = Intent (this@MainActivity, DetailActivity::class.java)
-                intentToDetail.putExtra(EXTRA_DETAIL, data.id)
+                intentToDetail.putExtra(EXTRA_DETAIL, data)
                 startActivity(intentToDetail)
             }
         })

@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.example.storyapp.data.preference.PrefManager
-import com.example.storyapp.data.remote.DetailResponse
 import com.example.storyapp.data.remote.ListStoryResponse
 import com.example.storyapp.data.remote.LoginResponse
 import com.example.storyapp.data.remote.RegisterResponse
@@ -53,17 +52,6 @@ class Repository private constructor(
             emit(Result.Success(client))
         } catch (e: Exception) {
             Log.e("MainViewModel", "getStories: ${e.message.toString()}")
-            emit(Result.Error(e.message.toString()))
-        }
-    }
-
-    fun detailStories(id: String): LiveData<Result<DetailResponse>> = liveData {
-        emit(Result.Loading)
-        try{
-            val client = apiService.detailStories(id)
-            emit(Result.Success(client))
-        } catch (e: Exception) {
-            Log.e("DetailViewModel", "detailStories: ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
         }
     }
