@@ -1,14 +1,11 @@
 package com.example.storyapp.presentation.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.storyapp.data.remote.Story
 import com.example.storyapp.databinding.ItemUserBinding
-import kotlin.math.log
 
 class ListStoryAdapter(private var response: List<Story>):
     RecyclerView.Adapter<ListStoryAdapter.ListStoryViewHolder>() {

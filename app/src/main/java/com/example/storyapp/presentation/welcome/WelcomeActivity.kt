@@ -9,7 +9,6 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.example.storyapp.R
 import com.example.storyapp.databinding.ActivityWelcomeBinding
 import com.example.storyapp.presentation.login.LoginActivity
 import com.example.storyapp.presentation.signup.SignupActivity

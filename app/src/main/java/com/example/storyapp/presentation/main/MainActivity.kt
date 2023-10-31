@@ -1,12 +1,11 @@
 package com.example.storyapp.presentation.main
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import com.example.storyapp.util.Constant.EXTRA_DETAIL
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.R
@@ -17,7 +16,7 @@ import com.example.storyapp.presentation.adapter.ListStoryAdapter
 import com.example.storyapp.presentation.detail.DetailActivity
 import com.example.storyapp.presentation.upload.UploadActivity
 import com.example.storyapp.presentation.welcome.WelcomeActivity
-import com.example.storyapp.util.Constant.EXTRA_TOKEN
+import com.example.storyapp.util.Constant.EXTRA_DETAIL
 import com.example.storyapp.util.Result
 
 class MainActivity : AppCompatActivity() {

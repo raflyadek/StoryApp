@@ -4,31 +4,25 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.InputFilter
-import android.text.TextWatcher
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import com.example.storyapp.R
-import com.example.storyapp.util.Result
+import androidx.appcompat.app.AppCompatActivity
 import com.example.storyapp.databinding.ActivitySignUpBinding
 import com.example.storyapp.presentation.ViewModelFactory
 import com.example.storyapp.presentation.login.LoginActivity
-import com.example.storyapp.presentation.login.LoginViewModel
+import com.example.storyapp.util.Result
 
 class SignupActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivitySignUpBinding.inflate(layoutInflater) }
-    private lateinit var etPassword: EditText
     private val viewModel by viewModels<SignupViewModel> {
         ViewModelFactory.getInstance(this)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -67,7 +61,7 @@ class SignupActivity : AppCompatActivity() {
     ) {
         viewModel.userRegister(name, email, password).observe(this) { result ->
             if (result != null) {
-                when(result) {
+                when (result) {
                     Result.Loading -> showLoading(true)
                     is Result.Success -> {
                         showLoading(false)
@@ -75,8 +69,9 @@ class SignupActivity : AppCompatActivity() {
                             setTitle("Berhasil!")
                             setMessage("Akun $email kamu sudah jadi.")
                             setPositiveButton("Next") { _, _ ->
-                                val intent = Intent (context, LoginActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                val intent = Intent(context, LoginActivity::class.java)
+                                intent.flags =
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                 startActivity(intent)
                                 finish()
                             }
@@ -84,6 +79,7 @@ class SignupActivity : AppCompatActivity() {
                             show()
                         }
                     }
+
                     is Result.Error -> {
                         showLoading(false)
                     }
@@ -106,7 +102,7 @@ class SignupActivity : AppCompatActivity() {
         val nameEditTextView =
             ObjectAnimator.ofFloat(binding.nameEditTextLayout, View.ALPHA, 1f).setDuration(100)
         val emailTextView =
-            ObjectAnimator.ofFloat(binding.emailTextView, View. ALPHA, 1f).setDuration(100)
+            ObjectAnimator.ofFloat(binding.emailTextView, View.ALPHA, 1f).setDuration(100)
         val emailEditTextView =
             ObjectAnimator.ofFloat(binding.emailEditTextLayout, View.ALPHA, 1f).setDuration(100)
         val passwordTextView =

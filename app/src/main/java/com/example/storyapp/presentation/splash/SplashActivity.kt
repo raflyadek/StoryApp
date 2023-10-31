@@ -2,14 +2,12 @@ package com.example.storyapp.presentation.splash
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.example.storyapp.data.preference.PrefManager
 import com.example.storyapp.databinding.ActivitySplashBinding
-import com.example.storyapp.presentation.ViewModelFactory
 import com.example.storyapp.presentation.main.MainActivity
 import com.example.storyapp.presentation.welcome.WelcomeActivity
 

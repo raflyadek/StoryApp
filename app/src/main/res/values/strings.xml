@@ -6,7 +6,6 @@
     <string name="map">Map</string>
     <string name="cam">Camera</string>
     <string name="gallery">Gallery</string>
-    <string name="submit">Submit</string>
     <string name="desc">Write Description</string>
     <string name="message_welcome_page">Mau cerita tentang keseharian kamu belajar programming? cerita di Story!</string>
     <string name="title_welcome_page">Selamat datang di Story!</string>
@@ -18,8 +17,5 @@
     <string name="message_login_page">Masukkan dulu datamu ya</string>
     <string name="title_login_page">Sudah siap untuk berbagi cerita?</string>
     <string name="name">Nama</string>
-    <string name="message_main_page">Selamat Belajar di Story.</string>
-    <string name="greeting">Halo %1$s,</string>
     <string name="logout">Keluar</string>
-    <string name="password_8_character">Password minimal 8 karakter></string>
 </resources>
