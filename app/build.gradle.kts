@@ -75,4 +75,10 @@ dependencies {
     implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
     implementation("androidx.camera:camera-view:$cameraxVersion")
 
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    //Maps
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    //Paging
+    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
+
 }

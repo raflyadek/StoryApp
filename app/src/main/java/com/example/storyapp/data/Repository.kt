@@ -69,6 +69,19 @@ class Repository private constructor(
         }
     }
 
+    fun getStoriesWithLocation(
+        location: Int
+    ): LiveData<Result<ListStoryResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val client = apiService.getStoriesWithLocation(location)
+            emit(Result.Success(client))
+        } catch (e: Exception) {
+            Log.e("MapViewModel", "map error: ${e.message.toString()}")
+            emit(Result.Error(e.message.toString()))
+        }
+    }
+
     fun clearSession() {
         return PrefManager.clearAllData()
     }

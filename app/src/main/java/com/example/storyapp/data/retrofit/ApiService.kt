@@ -42,4 +42,9 @@ interface ApiService {
         @Part file: MultipartBody.Part,
         @Part("description") description: RequestBody
     ) : UploadResponse
+
+    @GET("stories")
+    suspend fun getStoriesWithLocation(
+        @Query("location") location: Int,
+    ) : ListStoryResponse
 }
