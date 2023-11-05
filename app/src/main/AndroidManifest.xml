@@ -20,7 +20,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAA6rAyo1q_OecLTcuG35Kr3k5MvzDv5NU"/>
+            android:value="AIzaSyB-XQG52V8uR90E-lo3b5eYORTkycprPOk"/>
 
         <activity
             android:name=".presentation.upload.CameraActivity"
