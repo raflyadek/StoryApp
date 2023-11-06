@@ -54,7 +54,8 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.map_menu -> {
-                    startActivity(Intent(this, MapActivity::class.java))
+                    val intent = Intent(this, MapActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 R.id.upload_menu -> {
@@ -91,7 +92,6 @@ class MainActivity : AppCompatActivity() {
                     intentToDetail.putExtra(EXTRA_DETAIL, data)
                     startActivity(intentToDetail)
                 }
-
             })
         }
         setupAdapter()
