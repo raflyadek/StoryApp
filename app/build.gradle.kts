@@ -9,6 +9,10 @@ android {
     namespace = "com.example.storyapp"
     compileSdk = 34
 
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
+
     defaultConfig {
         applicationId = "com.example.storyapp"
         minSdk = 27

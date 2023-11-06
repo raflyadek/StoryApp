@@ -13,11 +13,13 @@ import com.example.storyapp.data.remote.Story
 import com.example.storyapp.presentation.adapter.ListStoryAdapter
 import com.example.storyapp.presentation.main.MainViewModel
 import com.example.storyapp.util.DummyData
+import com.example.storyapp.utils.MainDispatcherRule
 import com.example.storyapp.utils.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,12 +33,21 @@ class MainViewModelTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
     @Mock private lateinit var repository: Repository
+    private lateinit var mainViewModel: MainViewModel
 
     private val dummyStoriesResponse = DummyData.generateDummyStoriess()
 
+    @Before
+    fun setup() {
+        mainViewModel = MainViewModel(repository)
+    }
+
     @Test
-    fun `when getStories not null and return success`() = runTest {
+    fun `when getStories should not null and return success`() = runTest {
         val data: PagingData<Story> = StoryPagingSource.snapshot(dummyStoriesResponse.listStory)
         val expectedStories = MutableLiveData<PagingData<Story>>()
         expectedStories.value = data
@@ -57,6 +68,12 @@ class MainViewModelTest {
         Assert.assertEquals(dummyStoriesResponse.listStory, differ.snapshot())
         Assert.assertEquals(dummyStoriesResponse.listStory.size, differ.snapshot().size)
         Assert.assertEquals(dummyStoriesResponse.listStory[0].id, differ.snapshot()[0]?.id)
+    }
+
+    @Test
+    fun `User logout should call logout in Repository`() = runTest {
+        mainViewModel.logout()
+        Mockito.verify(repository).clearSession()
     }
 }
 
