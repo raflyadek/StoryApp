@@ -8,10 +8,10 @@
 Basic `Kotlin`, knowledge of `HTTP` request by Retrofit library are required for this project.
 
 ## Project Description
-I build a Story Application with MVVM Architecture. There are 6 screen in this project, which first there are `landing screen` with 2 button `Masuk` and `Daftar` when you click `Daftar` you have to create an account to enter the applicaton, after that you will enter the `Masuk` screen that you have to log in with the account you just made, and after you click `Masuk` and then the application will create a token for you and store that in your device storage with `Shared Preference` so you dont have to re-login everytume you close the application, and after that you will enter the home screen which display the `story` that other people post and will use `GET` methode from retrofit library to getting the story from server. There are `Upload` button to upload story which use `POST` method from retrofit library to sending information to a server to add or update resource.
+I build a Story Application with MVVM Architecture. There are 6 screen in this project, which first there are `landing screen` with 2 button `Masuk` and `Daftar` when you click `Daftar` you have to create an account to enter the applicaton, after that you will enter the `Masuk` screen that you have to log in with the account you just made, and after you click `Masuk` and then the application will create a token for you and store that in your device storage with `Shared Preference` so you dont have to re-login everytume you close the application, and after that you will enter the home screen which display the `Story` that other people post and will use `GET` methode from retrofit library to getting the story from server. There are `Upload` button to upload story which use `POST` method from retrofit library to sending information to a server to add or update resource.
 
 ## Story API
-I use [Dicoding Story API](https://story-api.dicoding.dev/v1/), because this project is for my one of my course at [Bangkit Academy](https://www.dicoding.com/programs/bangkit).
+I use [Dicoding Story API](https://story-api.dicoding.dev/v1/), because this project is for one of my course at [Bangkit Academy](https://www.dicoding.com/programs/bangkit).
 
 ## Libraries
 * [Retrofit](https://github.com/square/retrofit) for HTTP Request
