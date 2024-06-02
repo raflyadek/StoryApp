@@ -18,7 +18,7 @@ I use [Dicoding Story API](https://story-api.dicoding.dev/v1/), because this pro
 * [Glide](https://github.com/bumptech/glide) for Image Loader
 * [Paging](https://developer.android.com/jetpack/androidx/releases/paging) for Display List Story Data
 * [Mockito](https://github.com/mockito/mockito/releases) for Create Mock Object Testing
-* [Ksp](https://github.com/google/ksp/releases) for Annotation Processors
+* [Ksp](https://github.com/google/ksp/releases) for Annotation Processors`
 
 ## Run Project
 This Project was build on `JDK 1.8`. Sync the `Gradle` and run the project. Install APK on your emulator or real device. Dont forget to turn on the `internet` of your device so the application can access the API.
